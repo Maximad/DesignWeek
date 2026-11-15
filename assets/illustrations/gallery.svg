@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="رسم تجريدي لمعرض أعمال بصرية ومنحوتات"><defs><pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse"><path d="M52 0H0V52" fill="none" stroke="#121713" stroke-opacity=".08" stroke-width="1"/></pattern><pattern id="grain" width="80" height="80" patternUnits="userSpaceOnUse"><circle cx="12" cy="24" r="1.3" fill="#25281d" opacity=".12"/><circle cx="64" cy="50" r="1" fill="#25281d" opacity=".08"/></pattern><linearGradient id="light" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#f5ead8"/><stop offset="1" stop-color="#d6d1bc"/></linearGradient></defs><rect width="1200" height="900" fill="#cccab6"/>
+<rect width="1200" height="900" fill="url(#grid)"/>
+<path d="M0 711H1200V900H0Z" fill="#e8decb"/>
+<rect x="100" y="111" width="290" height="475" fill="#27392e"/>
+<rect x="140" y="148" width="210" height="393" fill="#d3a27e"/>
+<path d="M148 450L344 211M140 279L352 470" stroke="#3b4434" stroke-width="20"/>
+<circle cx="240" cy="353" r="58" fill="#e9d9bc"/>
+<rect x="456" y="155" width="260" height="319" fill="#a8533b"/>
+<circle cx="588" cy="305" r="101" fill="#e4cfb0"/>
+<circle cx="588" cy="305" r="50" fill="#65775f"/>
+<rect x="777" y="89" width="322" height="498" fill="#354636"/>
+<path d="M807 552Q860 185 1003 198Q1115 224 1063 552Z" fill="#e3b188"/>
+<path d="M816 543L1030 288" stroke="#c3704e" stroke-width="17"/>
+<path d="M510 711H720L692 805H545Z" fill="#7c8d78"/>
+<path d="M541 677Q492 537 601 488Q706 526 676 678Z" fill="#d27a56"/>
+<ellipse cx="603" cy="488" rx="62" ry="26" fill="#f2dfc2"/>
+<path d="M0 711H1200" stroke="#303b30" stroke-width="9"/>
+<circle cx="1133" cy="674" r="27" fill="#c96f4e"/><rect width="1200" height="900" fill="url(#grain)" opacity=".45"/></svg>
