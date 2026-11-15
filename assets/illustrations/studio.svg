@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="تكوين تجريدي لطاولة ورشة تشكيل ومجسمات"><defs><pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse"><path d="M52 0H0V52" fill="none" stroke="#121713" stroke-opacity=".08" stroke-width="1"/></pattern><pattern id="grain" width="80" height="80" patternUnits="userSpaceOnUse"><circle cx="12" cy="24" r="1.3" fill="#25281d" opacity=".12"/><circle cx="64" cy="50" r="1" fill="#25281d" opacity=".08"/></pattern><linearGradient id="light" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#f5ead8"/><stop offset="1" stop-color="#d6d1bc"/></linearGradient></defs><rect width="1200" height="900" fill="#dfd6c4"/>
+<rect width="1200" height="900" fill="url(#grid)"/>
+<path d="M0 590L1200 465V900H0Z" fill="#aaae9d"/>
+<rect x="65" y="105" width="370" height="414" fill="#7e8975"/>
+<path d="M106 458V282Q106 147 250 147T394 282V458" fill="none" stroke="#f0e9d8" stroke-width="19"/>
+<rect x="695" y="75" width="320" height="260" fill="#272f29"/>
+<path d="M720 283L789 138L874 264L955 114" fill="none" stroke="#e5b59b" stroke-width="16"/>
+<rect x="141" y="541" width="807" height="65" rx="4" fill="#393f35"/>
+<path d="M181 609L140 845H216L270 609M810 609L864 845H939L899 609" fill="#a45b42"/>
+<ellipse cx="544" cy="550" rx="350" ry="62" fill="#f4e9d5"/>
+<path d="M302 495H401V544H302Z" fill="#d18c64"/>
+<path d="M315 418Q306 386 347 372Q391 362 387 414V497H315Z" fill="#eacbb0"/>
+<path d="M320 406Q347 386 383 406" stroke="#b96f53" stroke-width="8" fill="none"/>
+<circle cx="526" cy="455" r="93" fill="#b5bda6"/>
+<path d="M489 455L526 363L563 455L526 548Z" fill="#ece2d2"/>
+<path d="M617 502L697 403L771 491L690 548Z" fill="#d27352"/>
+<path d="M697 403V342L772 414V491Z" fill="#6e7c66"/>
+<path d="M697 342L617 429V502L697 403Z" fill="#2f3b34"/>
+<path d="M808 495Q760 390 837 363Q908 384 874 495Z" fill="#e6d6bc"/>
+<circle cx="838" cy="338" r="19" fill="#ca7b58"/>
+<path d="M944 640H1097V713H944Z" fill="#c37954"/>
+<path d="M979 640V563Q1018 515 1063 563V640" stroke="#344238" stroke-width="17" fill="none"/>
+<path d="M0 734L1200 604" stroke="#3c473b" stroke-opacity=".23" stroke-width="4"/><rect width="1200" height="900" fill="url(#grain)" opacity=".45"/></svg>
