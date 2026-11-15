@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="رسم تجريدي لقاعة فعاليات وتصميم"><defs><pattern id="grid" width="52" height="52" patternUnits="userSpaceOnUse"><path d="M52 0H0V52" fill="none" stroke="#121713" stroke-opacity=".08" stroke-width="1"/></pattern><pattern id="grain" width="80" height="80" patternUnits="userSpaceOnUse"><circle cx="12" cy="24" r="1.3" fill="#25281d" opacity=".12"/><circle cx="64" cy="50" r="1" fill="#25281d" opacity=".08"/></pattern><linearGradient id="light" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#f5ead8"/><stop offset="1" stop-color="#d6d1bc"/></linearGradient></defs><rect width="1200" height="900" fill="#c4c2ab"/>
+<rect width="1200" height="900" fill="url(#grid)"/>
+<path d="M0 704L1200 634V900H0Z" fill="#e8dec8"/>
+<path d="M72 145H1112V667H72Z" fill="#293a30"/>
+<path d="M106 181H1074V626H106Z" fill="#73866e"/>
+<path d="M153 207H1023V587H153Z" fill="#d7b48b"/>
+<rect x="358" y="244" width="478" height="282" fill="#29382f"/>
+<rect x="390" y="274" width="410" height="224" fill="#e2d9c2"/>
+<circle cx="592" cy="381" r="84" fill="#cd714f"/>
+<path d="M0 707L1200 635" stroke="#354135" stroke-width="8"/>
+<path d="M210 641L473 588L800 591L1062 660L918 734H296Z" fill="#394b3c"/>
+<path d="M418 712L499 537H690L760 712" fill="#c67b55"/>
+<path d="M517 711L535 591H652L675 711" fill="#e0c2a0"/>
+<path d="M116 760H341V802H116ZM854 760H1079V802H854Z" fill="#b9664a"/>
+<circle cx="232" cy="639" r="38" fill="#efddbe"/>
+<path d="M200 638L230 543L269 638" fill="#c87556"/>
+<path d="M881 625L944 527L1006 625Z" fill="#273b2e"/>
+<circle cx="947" cy="602" r="29" fill="#e8d9bd"/><rect width="1200" height="900" fill="url(#grain)" opacity=".45"/></svg>
