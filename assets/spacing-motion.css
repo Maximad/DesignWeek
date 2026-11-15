@@ -1,0 +1,107 @@
+/* Design Week — subtle spacing and motion enhancements.
+   Applied after atlas.css. Mobile-first; content and structure are unchanged. */
+
+/* Give the editorial composition more breathing room. */
+.design-atlas .hero { padding-top: 100px; }
+.design-atlas .hero h1 { margin-block: 35px 28px; }
+.design-atlas .hero-lead { line-height: 1.92; }
+.design-atlas .hero-actions { margin-top: 34px; }
+.design-atlas .hero-data { margin-block: 42px 26px; }
+.design-atlas .status-note { padding-block: 20px; }
+
+.design-atlas .intro { padding-block: 95px 115px; }
+.design-atlas .intro .section-heading { padding-bottom: 31px; margin-bottom: 42px; }
+.design-atlas .intro-grid { gap: 38px; }
+.design-atlas .intro-body > p:not(.intro-big) { margin-top: 26px; }
+.design-atlas .value-grid > div { padding-block: 25px 33px; }
+.design-atlas .value-grid h3 { margin-top: 17px; }
+
+.design-atlas .tracks-section { padding-block: 108px 125px; }
+.design-atlas .tracks-section .section-heading { padding-bottom: 25px; margin-bottom: 38px; }
+.design-atlas .track-body { padding-block: 35px 40px; }
+.design-atlas .track-number { margin-bottom: 21px; }
+.design-atlas .track-body p { margin-top: 20px; line-height: 1.98; }
+.design-atlas .track-keyword { margin-top: 24px; }
+
+.design-atlas .place-section { padding-block: 105px 116px; gap: 50px; }
+.design-atlas .place-text p { margin-top: 27px; line-height: 2.05; }
+.design-atlas .place-text .small-note { margin-top: 20px; }
+.design-atlas .place-text .text-link { margin-top: 31px; }
+
+.design-atlas .program-section { padding-block: 110px 124px; }
+.design-atlas .program-section .section-heading { padding-bottom: 34px; margin-bottom: 50px; }
+.design-atlas .program-section .section-heading > p { margin-top: 19px; }
+.design-atlas .schedule-panel { padding-block: 40px 47px; gap: 27px; }
+.design-atlas .schedule-description h3 { margin-block: 20px 19px; }
+.design-atlas .schedule-description ul { margin-top: 24px; }
+.design-atlas .program-disclaimer { margin-top: 28px; }
+
+.design-atlas .participate-section { padding-block: 114px 125px; }
+.design-atlas .participate-section .section-heading { padding-bottom: 33px; margin-bottom: 38px; }
+.design-atlas .participate-section .section-heading > p { margin-top: 19px; }
+.design-atlas .application-note { margin-bottom: 37px; padding-block: 21px; }
+.design-atlas .participation-card { min-height: 110px; padding-block: 20px; }
+.design-atlas .application-detail { padding-block: 41px; gap: 31px; }
+.design-atlas .application-detail h3 { margin-top: 17px; }
+
+.design-atlas .standards-section { padding-block: 112px; }
+.design-atlas .standards-section .section-heading { margin-bottom: 48px; }
+.design-atlas .standards-grid article { padding-block: 32px 36px; }
+.design-atlas .standards-grid p { line-height: 1.95; }
+
+.design-atlas .community-section { padding-block: 93px; gap: 31px; }
+.design-atlas .community-copy p + p { margin-top: 19px; }
+.design-atlas .faq-section { padding-block: 115px 135px; }
+.design-atlas .faq-section .section-heading { margin-bottom: 39px; padding-bottom: 30px; }
+.design-atlas .faq-list summary { padding-block: 29px; }
+.design-atlas .closing-content { padding-block: 110px 120px; }
+.design-atlas .closing-content p { margin-top: 32px; }
+.design-atlas .closing-actions { margin-top: 43px; }
+
+/* Minimal scroll effects: no layout shift, opacity and small translation only.
+   Effects are progressive; JavaScript opts elements in as they approach the viewport. */
+.design-atlas .reveal-pending {
+  transition: opacity .62s ease, transform .62s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.design-atlas .reveal-pending:not(.reveal-visible) {
+  opacity: 0;
+  transform: translate3d(0, 15px, 0);
+}
+.design-atlas .reveal-pending.reveal-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.design-atlas .site-header {
+  transition: box-shadow .25s ease, background-color .25s ease;
+}
+.design-atlas .site-header.is-scrolled {
+  background-color: #e4e2d5;
+  box-shadow: 0 5px 20px rgba(24, 40, 30, .12);
+}
+
+@media (min-width: 650px) {
+  .design-atlas .hero h1 { margin-block: 40px 34px; }
+  .design-atlas .intro-grid { gap: 47px; }
+  .design-atlas .track-body { padding-block: 39px 45px; }
+  .design-atlas .place-section { gap: 58px; }
+  .design-atlas .schedule-panel { padding-block: 52px; }
+  .design-atlas .application-detail { padding-block: 49px; }
+}
+@media (min-width: 1000px) {
+  .design-atlas .hero { padding-top: 132px; }
+  .design-atlas .intro { padding-block: 151px 164px; }
+  .design-atlas .tracks-section { padding-block: 151px 168px; }
+  .design-atlas .place-section { padding-block: 148px 164px; gap: 8%; }
+  .design-atlas .program-section { padding-block: 140px 157px; }
+  .design-atlas .participate-section { padding-block: 161px 174px; }
+  .design-atlas .standards-section { padding-block: 144px; }
+  .design-atlas .community-section { padding-block: 131px; }
+  .design-atlas .faq-section { padding-block: 157px 168px; }
+  .design-atlas .closing-content { padding-block: 151px 161px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .design-atlas .reveal-pending,
+  .design-atlas .site-header { transition: none !important; }
+  .design-atlas .reveal-pending { opacity: 1 !important; transform: none !important; }
+}
