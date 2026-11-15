@@ -397,3 +397,40 @@ body.design-atlas{
 @media(prefers-reduced-motion:reduce){
  .design-atlas *, .design-atlas *::before, .design-atlas *::after{animation:none!important;transition:none!important}
 }
+
+/* Fold-out chapter map: the public site reads like an exhibition guide. */
+.design-atlas h1,.design-atlas h2,.design-atlas h3{
+ font-family:"Alexandria","IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;
+}
+.design-atlas .hero h1{font-weight:700}
+.design-atlas .atlas-index{
+ width:100%;display:flex;direction:rtl;overflow-x:auto;overscroll-behavior-x:contain;
+ scrollbar-width:thin;scroll-snap-type:x proximity;background:#ca6d47;
+ border-bottom:3px solid #223429;border-top:2px solid #223429;
+}
+.design-atlas .atlas-index-lead{
+ flex:0 0 156px;min-height:112px;display:flex;flex-direction:column;
+ justify-content:center;align-items:flex-start;gap:3px;
+ padding:15px 19px;background:#22382c;color:#f0e7d6;
+ scroll-snap-align:start;
+}
+.design-atlas .atlas-index-lead span{font:700 10px "Space Grotesk",sans-serif;letter-spacing:.15em;color:#e7a280}
+.design-atlas .atlas-index-lead strong{font-size:18px;line-height:1.4}
+.design-atlas .atlas-index-lead small{font-size:10px;color:#aebca8}
+.design-atlas .atlas-index>a{
+ position:relative;flex:0 0 116px;min-height:112px;padding:14px 13px 15px;
+ display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
+ background:#ca6d47;color:#26362b;border-inline-end:1.5px solid #26362b;
+ scroll-snap-align:start;transition:background .2s,color .2s;
+}
+.design-atlas .atlas-index>a:hover,.design-atlas .atlas-index>a:focus-visible{background:#ebd9ba;color:#27392b}
+.design-atlas .atlas-index>a span{font:700 12px "Space Grotesk",sans-serif}
+.design-atlas .atlas-index>a strong{font-family:"Alexandria","IBM Plex Sans Arabic",sans-serif;font-size:16px}
+.design-atlas .atlas-index>a i{position:absolute;top:12px;left:13px;font-style:normal;font-size:15px}
+@media(min-width:1050px){
+ .design-atlas .atlas-index{overflow:hidden;scroll-snap-type:none}
+ .design-atlas .atlas-index-lead{flex:1.35;min-height:135px;padding:22px clamp(19px,4.5vw,78px)}
+ .design-atlas .atlas-index>a{flex:1;min-height:135px;padding:20px 15px}
+ .design-atlas .atlas-index>a strong{font-size:clamp(15px,1.5vw,22px)}
+ .design-atlas .atlas-index>a span{font-size:12px}
+}
