@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}طلب: {{categories[category][0]}} — أسبوع التصميم{% endblock %}
+{% block content %}
+<a href="/apply/" class="minor-link">↗ العودة إلى خيارات المشاركة</a>
+<div class="eyebrow">APPLICATION / {{category|upper}}</div>
+<h1>{{categories[category][0]}}</h1>
+<p class="lead">الطلب الأولي يستغرق دقائق. لا يُطلب منك دفع رسوم أو تقديم مستندات شخصية. سنراجع المقترح ثم نتواصل معك عند الحاجة.</p>
+{% if not open %}<div class="notice">استقبال الطلبات غير مفتوح حالياً. النموذج للعرض فقط.</div>{% endif %}
+{% if error %}<div class="alert" role="alert">{{error}}</div>{% endif %}
+<form method="post" action="/apply/{{category}}/" enctype="multipart/form-data" class="form">
+<input type="hidden" name="csrf" value="{{csrf}}">
+<div class="honeypot" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+<h2><span>01</span> معلومات التواصل</h2>
+<div class="cols"><label>الاسم أو اسم الفريق <b>*</b><input name="full_name" minlength="2" maxlength="120" required autocomplete="name" value="{{values.get('full_name','')}}"></label>
+<label>المدينة / مكان الإقامة<input name="city" maxlength="120" value="{{values.get('city','')}}"></label></div>
+<div class="cols"><label>البريد الإلكتروني<input type="email" name="email" maxlength="200" autocomplete="email" value="{{values.get('email','')}}"></label>
+<label>رقم هاتف أو واتساب<input name="phone" maxlength="80" autocomplete="tel" value="{{values.get('phone','')}}"></label></div>
+<p class="hint">نحتاج وسيلة تواصل واحدة على الأقل: بريد إلكتروني أو رقم هاتف.</p>
+<h2><span>02</span> تفاصيل الفكرة</h2>
+<label>عنوان العمل أو الفكرة <b>*</b><input name="project_title" required minlength="3" maxlength="180" value="{{values.get('project_title','')}}"></label>
+<label>وصف العمل أو المقترح <b>*</b><textarea name="description" required minlength="30" maxlength="2500" rows="6" placeholder="ما الفكرة؟ ما الذي ترغب بعرضه أو تقديمه؟">{{values.get('description','')}}</textarea></label>
+<div class="cols"><label>{{categories[category][1]}}<textarea name="extra_1" maxlength="2000" rows="3">{{values.get('extra_1','')}}</textarea></label>
+<label>{{categories[category][2]}}<textarea name="extra_2" maxlength="2000" rows="3">{{values.get('extra_2','')}}</textarea></label></div>
+<div class="cols"><label>الأيام أو الأوقات المتاحة<textarea name="availability" maxlength="2000" rows="3">{{values.get('availability','')}}</textarea></label>
+<label>احتياجاتك من المكان أو الفريق أو التجهيزات<textarea name="needs" maxlength="2000" rows="3">{{values.get('needs','')}}</textarea></label></div>
+<h2><span>03</span> أعمال ومرفقات</h2>
+<label>رابط أعمال سابقة أو موقع المشروع<input type="url" name="portfolio_url" maxlength="500" placeholder="https://..." value="{{values.get('portfolio_url','')}}"></label>
+<label>ملف واحد اختياري (PDF أو JPG أو PNG أو WEBP، حتى 8 ميغابايت)<input type="file" name="portfolio_file" accept=".pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/jpeg,image/png,image/webp"></label>
+<p class="hint">المرفق خاص بفريق المراجعة. لن يكون متاحاً للزوار ولا للنشر تلقائياً.</p>
+<div class="agreement"><label><input type="checkbox" name="consent" value="yes" required> أوافق على استخدام بيانات التواصل والمقترح لمراجعة الطلب والتواصل معي فقط، وفق <a href="/privacy/" target="_blank" rel="noopener">بيان الخصوصية</a>.</label>
+<label><input type="checkbox" name="terms" value="yes" required> أؤكد أنني أملك حق مشاركة النصوص والصور المقدمة، وأن الإرسال لا يعني القبول أو نقل ملكية أعمالي.</label></div>
+<button class="submit" type="submit" {% if not open %}disabled{% endif %}>إرسال طلب المشاركة ↗</button>
+<p class="hint">لا توجد رسوم أو التزامات مالية ناتجة عن إرسال هذا الطلب. تُتفق التفاصيل لاحقاً بشكل منفصل.</p>
+</form>
+{% endblock %}

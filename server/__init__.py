@@ -1,0 +1,1 @@
+"""Hub Design Week application intake."""
