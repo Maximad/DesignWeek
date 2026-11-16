@@ -14,7 +14,7 @@ SALT = b'1234567890123456'
 ITER = 10000
 PASSWORD = 'a-very-long-testing-password'
 HASH = hashlib.pbkdf2_hmac('sha256',PASSWORD.encode(),SALT,ITER).hex()
-os.environ['DW_ADMIN_PASSWORD_HASH'] = f'pbkdf2_sha256${ITER}${SALT.hex()}${HASH}'
+os.environ['DW_ADMIN_PASSWORD_HASH'] = f'pbkdf2_sha256:{ITER}:{SALT.hex()}:{HASH}'
 from fastapi.testclient import TestClient
 from server import app as dw
 
