@@ -13,4 +13,4 @@ if password != confirmation:
 salt = secrets.token_bytes(16)
 iterations = 600000
 value = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, iterations).hex()
-print(f"DW_ADMIN_PASSWORD_HASH=pbkdf2_sha256${iterations}${salt.hex()}${value}")
+print(f"DW_ADMIN_PASSWORD_HASH=pbkdf2_sha256:{iterations}:{salt.hex()}:{value}")
