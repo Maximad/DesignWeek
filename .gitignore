@@ -9,3 +9,5 @@ private-uploads/
 data/
 backups/
 *.log
+# Local VPS-specific Caddy network overlay, generated only on target VPS
+compose.gateway.yml

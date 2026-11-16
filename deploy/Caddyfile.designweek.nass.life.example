@@ -1,0 +1,9 @@
+# Caddy site block only — append to the existing /opt/gateway Caddyfile.
+# Do not overwrite the gateway or its other site blocks.
+# DNS A designweek.nass.life → 72.62.52.167 must first be verified live.
+# Caddy container and designweek app MUST share an actual Docker network.
+# Caddy uses ACME to obtain TLS after the hostname resolves and ports 80/443 work.
+designweek.nass.life {
+    encode zstd gzip
+    reverse_proxy designweek:8000
+}
