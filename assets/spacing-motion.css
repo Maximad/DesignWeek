@@ -105,3 +105,11 @@
   .design-atlas .site-header { transition: none !important; }
   .design-atlas .reveal-pending { opacity: 1 !important; transform: none !important; }
 }
+/* Contrast correction: the original orange-card rules left pale text on the new light atlas panels. */
+.design-atlas .track-card.orange .track-number,
+.design-atlas .track-card.pale .track-number { color: #873C26; }
+.design-atlas .track-card.orange .track-body p,
+.design-atlas .track-card.pale .track-body p { color: #33483B; }
+.design-atlas .track-card.orange .track-body h3,
+.design-atlas .track-card.pale .track-body h3 { color: #243629; }
+.design-atlas .tracks-section .track-keyword { color: #873C26; }
