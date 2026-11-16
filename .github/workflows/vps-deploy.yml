@@ -1,0 +1,29 @@
+name: Deploy DesignWeek to VPS (isolated service)
+on:
+  workflow_dispatch:
+  # Manual until VPS secrets, domain and site are verified. Avoid accidental deploys.
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require explicit VPS connection settings
+        env:
+          VPS_HOST: ${{ secrets.DESIGNWEEK_VPS_HOST }}
+          VPS_USER: ${{ secrets.DESIGNWEEK_VPS_USER }}
+          VPS_KEY: ${{ secrets.DESIGNWEEK_VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.DESIGNWEEK_VPS_KNOWN_HOSTS }}
+        run: |
+          test -n "$VPS_HOST" && test -n "$VPS_USER" && test -n "$VPS_KEY" && test -n "$VPS_KNOWN_HOSTS" || (echo 'VPS SSH secrets unavailable; refusing deployment' && exit 1)
+      - name: Run isolated deploy script on VPS
+        env:
+          VPS_HOST: ${{ secrets.DESIGNWEEK_VPS_HOST }}
+          VPS_USER: ${{ secrets.DESIGNWEEK_VPS_USER }}
+          VPS_KEY: ${{ secrets.DESIGNWEEK_VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.DESIGNWEEK_VPS_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$VPS_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts && chmod 600 ~/.ssh/known_hosts
+          ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$VPS_USER@$VPS_HOST" 'bash -s' < <(curl -fsSL https://raw.githubusercontent.com/Maximad/DesignWeek/main/deploy/vps-deploy.sh)

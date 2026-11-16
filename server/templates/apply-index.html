@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}المشاركة — أسبوع التصميم{% endblock %}
+{% block content %}
+<div class="eyebrow">01 / TAKE PART</div>
+<h1>شارك بفكرة،<br><em>أو عمل.</em></h1>
+<p class="lead">اختر طريقة مشاركتك. يمكنك تقديم أكثر من مقترح إذا كان لكلٍّ منها فكرة مستقلة. المشاركة تخضع لمراجعة فريق التنسيق ولا تضمن القبول.</p>
+{% if not open %}<div class="notice">استقبال الطلبات غير مفتوح حالياً. يمكنك الاطلاع على الفئات والاستعداد للتقديم.</div>{% endif %}
+<div class="categories">{% for key, info in categories.items() %}<a class="category" href="/apply/{{key}}/"><small>0{{loop.index}}</small><strong>{{info[0]}}</strong><span>↗</span></a>{% endfor %}</div>
+{% endblock %}
