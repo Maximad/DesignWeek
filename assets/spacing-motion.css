@@ -113,3 +113,37 @@
 .design-atlas .track-card.orange .track-body h3,
 .design-atlas .track-card.pale .track-body h3 { color: #243629; }
 .design-atlas .tracks-section .track-keyword { color: #873C26; }
+
+/* Editorial readability pass — preserve the established olive and terracotta palette.
+   Small muted copy on pale surfaces must remain comfortably legible. */
+.design-atlas .tracks-section .track-card .track-body p,
+.design-atlas .tracks-section .track-card.orange .track-body p,
+.design-atlas .tracks-section .track-card.pale .track-body p,
+.design-atlas .tracks-section .section-heading > p,
+.design-atlas .intro .value-grid p,
+.design-atlas .standards-section .standards-grid p {
+  color: #324434;
+}
+.design-atlas .tracks-section .track-card .track-body h3,
+.design-atlas .tracks-section .track-card.orange .track-body h3,
+.design-atlas .tracks-section .track-card.pale .track-body h3 {
+  color: #243629;
+}
+.design-atlas .tracks-section .track-card .track-number,
+.design-atlas .tracks-section .track-card.orange .track-number,
+.design-atlas .tracks-section .track-card.pale .track-number,
+.design-atlas .tracks-section .track-card .track-keyword,
+.design-atlas .tracks-section .track-card.orange .track-keyword {
+  color: #853E29;
+}
+.design-atlas .participate-section .section-heading > p,
+.design-atlas .participate-section .application-note p,
+.design-atlas .participation-card .part-main small,
+.design-atlas .faq-section .faq-list details > p,
+.design-atlas .place-section .place-text p {
+  color: #394B3A;
+}
+.design-atlas .participation-card[aria-pressed="true"] .part-main small,
+.design-atlas .participation-card:hover .part-main small {
+  color: #324434;
+}
