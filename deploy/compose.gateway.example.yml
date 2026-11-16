@@ -1,0 +1,12 @@
+# Opt-in Docker Compose override, NOT used by default.
+# Copy to compose.gateway.yml on the VPS and set DW_GATEWAY_NETWORK
+# in the PRIVATE .env after inspecting gateway-caddy-1's networks.
+services:
+  designweek:
+    networks:
+      - default
+      - gateway
+networks:
+  gateway:
+    external: true
+    name: ${DW_GATEWAY_NETWORK:?Set DW_GATEWAY_NETWORK to the existing Caddy Docker network name}
