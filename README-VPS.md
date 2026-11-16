@@ -2,12 +2,20 @@
 
 This repository keeps the original Arabic editorial landing page intact on GitHub Pages and adds an independent, production-ready **FastAPI + SQLite** intake service for a Hostinger VPS. The service serves the same `index.html` and `assets/` on an isolated host, plus application forms and the private review desk.
 
+## Canonical project address — designweek.nass.life (not yet provisioned)
+
+The selected **public website + application forms + private coordinator login** hostname is `designweek.nass.life`, on the existing Hostinger VPS. DNS must contain a **single new A record** with `Name=designweek`, `Type=A`, `Value=<verified VPS public IPv4>`, `TTL=300` (or provider default). If IPv6 is configured, an AAAA record is optional and must only be set to the VPS's actual IPv6. The value is intentionally unspecified because the VPS IP has not been verified.
+
+**Do not edit the apex `nass.life`, `www`, MX, SPF/DKIM/DMARC, verification or existing service records.** Before writing DNS, inspect the authoritative zone for conflicting `designweek` A, AAAA or CNAME entries. Only replace an existing `designweek` record after verifying its ownership and target. DNS record creation and VPS access were not possible from the current ChatGPT integration; these instructions are preparation, **not a claim that DNS exists**.
+
+VPS proxy: install `deploy/nginx-designweek.nass.life.conf.example` as a **new and separate** Nginx server block after checking for an existing conflicting virtual host. Do not apply this server block while another service owns the hostname. After DNS resolves to the verified VPS, obtain a TLS certificate (for example, with your existing Certbot method: `sudo certbot --nginx -d designweek.nass.life`), enable HTTPS redirect, and validate both the public page and `/apply/`, `/manage/login/`, `/healthz` over HTTPS. Keep forms closed until all end-to-end checks pass. Existing GitHub Pages address remains available and must not be retired until the new site is live.
+
 ## User experience
 
-- `https://DESIGNWEEK_DOMAIN/` — Arabic reference website, same visual palette, SVG illustrations, programme and principles.
-- `https://DESIGNWEEK_DOMAIN/apply/` — six participation types: artist, maker/vendor, workshop, venue, resources, crew.
-- `https://DESIGNWEEK_DOMAIN/apply/artist/` etc. — tailored Arabic form for each category (includes optional portfolio upload).
-- `https://DESIGNWEEK_DOMAIN/manage/login/` — authenticated coordinator access.
+- `https://designweek.nass.life/` — Arabic reference website, same visual palette, SVG illustrations, programme and principles.
+- `https://designweek.nass.life/apply/` — six participation types: artist, maker/vendor, workshop, venue, resources, crew.
+- `https://designweek.nass.life/apply/artist/` etc. — tailored Arabic form for each category (includes optional portfolio upload).
+- `https://designweek.nass.life/manage/login/` — authenticated coordinator access.
 - `/manage/` — private review queue, filters by category/status, details, status notes, and CSV export.
 - `/privacy/` — privacy explanation.
 
