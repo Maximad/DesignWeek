@@ -1,0 +1,33 @@
+name: Verify DesignWeek DNS and HTTPS
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-designweek-dns.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-hostname:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check DNS, HTTP, HTTPS and app health
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import socket
+          name = "designweek.nass.life"
+          try:
+              ips = sorted({row[4][0] for row in socket.getaddrinfo(name, 443, type=socket.SOCK_STREAM, family=socket.AF_INET)})
+              print(f"Public DNS IPv4 {name}: {', '.join(ips)}")
+              print("Expected historical VPS IPv4: 72.62.52.167")
+              if "72.62.52.167" not in ips:
+                  print("WARNING: Current DNS does not resolve to the last recorded VPS address.")
+          except Exception as error:
+              print(f"DNS lookup failed: {error}")
+          PY
+          for uri in "http://designweek.nass.life/" "https://designweek.nass.life/" "https://designweek.nass.life/healthz" "https://designweek.nass.life/apply/"; do
+            echo "----- $uri"
+            curl --silent --show-error --location --max-redirs 3 --max-time 12 --output /dev/null --write-out 'HTTP=%{http_code} IP=%{remote_ip} TLS_VERIFY=%{ssl_verify_result} REDIRECTS=%{num_redirects}\n' "$uri" || true
+          done
+          echo 'Only a DNS and public endpoint check; it does not deploy or change VPS/DNS.'
