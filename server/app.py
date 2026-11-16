@@ -60,6 +60,7 @@ FILE_SIGNATURES = {
 app = FastAPI(title="DesignWeek Applications", docs_url=None, redoc_url=None, openapi_url=None)
 _hosts = [host.strip() for host in os.getenv("DW_ALLOWED_HOSTS", "").split(",") if host.strip()]
 if _hosts:
+    _hosts.extend(["localhost", "127.0.0.1"])
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=_hosts)
 
 @app.middleware("http")
@@ -154,7 +155,7 @@ def require_admin(request: Request) -> None:
 
 def check_admin_password(password: str) -> bool:
     try:
-        method, iterations, salt, expected = ADMIN_HASH.split("$", 3)
+        method, iterations, salt, expected = ADMIN_HASH.split(":", 3)
         if method != "pbkdf2_sha256":
             return False
         actual = hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt), int(iterations)).hex()
