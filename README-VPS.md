@@ -2,13 +2,15 @@
 
 This repository keeps the original Arabic editorial landing page intact on GitHub Pages and adds an independent, production-ready **FastAPI + SQLite** intake service for a Hostinger VPS. The service serves the same `index.html` and `assets/` on an isolated host, plus application forms and the private review desk.
 
-## Canonical project address — designweek.nass.life (not yet provisioned)
+## Canonical project address — designweek.nass.life (deployment pending)
 
-The selected **public website + application forms + private coordinator login** hostname is `designweek.nass.life`, on the existing Hostinger VPS. DNS must contain a **single new A record** with `Name=designweek`, `Type=A`, `Value=<verified VPS public IPv4>`, `TTL=300` (or provider default). If IPv6 is configured, an AAAA record is optional and must only be set to the VPS's actual IPv6. The value is intentionally unspecified because the VPS IP has not been verified.
+**Chosen hostname:** `designweek.nass.life` for the public Arabic catalogue, six application forms, and private coordinator review desk. The previously documented Hostinger VPS is `srv1169365`, last reported at public IPv4 **72.62.52.167** (14 November 2026). Confirm this VPS address and the current DNS zone before updating anything; no live DNS or SSH access was available during this ChatGPT run.
 
-**Do not edit the apex `nass.life`, `www`, MX, SPF/DKIM/DMARC, verification or existing service records.** Before writing DNS, inspect the authoritative zone for conflicting `designweek` A, AAAA or CNAME entries. Only replace an existing `designweek` record after verifying its ownership and target. DNS record creation and VPS access were not possible from the current ChatGPT integration; these instructions are preparation, **not a claim that DNS exists**.
+**Only DNS change required:** create `A designweek.nass.life → 72.62.52.167` with TTL 300 seconds or the Hostinger default. First inspect `designweek` A/AAAA/CNAME for conflicts, and read the current `nass.life` zone/snapshot. Leave `@`, `www`, `hub`, MX, TXT (including SPF/DKIM/DMARC), verification and other service DNS records unchanged. Never change domain nameservers to do this. The Hostinger DNS zone was previously used to add `hub.nass.life`.
 
-VPS proxy: install `deploy/nginx-designweek.nass.life.conf.example` as a **new and separate** Nginx server block after checking for an existing conflicting virtual host. Do not apply this server block while another service owns the hostname. After DNS resolves to the verified VPS, obtain a TLS certificate (for example, with your existing Certbot method: `sudo certbot --nginx -d designweek.nass.life`), enable HTTPS redirect, and validate both the public page and `/apply/`, `/manage/login/`, `/healthz` over HTTPS. Keep forms closed until all end-to-end checks pass. Existing GitHub Pages address remains available and must not be retired until the new site is live.
+**Reverse proxy:** the actual VPS gateway runs **Caddy** in a container, not a host-level Nginx instance. Therefore use the isolated `deploy/Caddyfile.designweek.nass.life.example` route and `deploy/compose.gateway.example.yml` overlay after discovering the gateway's *actual shared Docker network*. Caddy issues HTTPS certificates automatically once DNS resolves and inbound ports 80/443 are working. Do not replace an existing Caddyfile; add one site block and validate/reload the existing gateway. Do not expose private application data or another service through this hostname.
+
+**Cutover:** GitHub Pages `https://maximad.github.io/DesignWeek/` remains available and continues to disable submission buttons. Do not announce the new host or open applications until `https://designweek.nass.life/` and its form/admin routes have passed actual end-to-end HTTPS tests.
 
 ## User experience
 
@@ -21,19 +23,21 @@ VPS proxy: install `deploy/nginx-designweek.nass.life.conf.example` as a **new a
 
 All personal data and uploaded files are stored exclusively in a Docker volume containing SQLite and a **private** upload directory. Uploads are not served as public static files; a staff login is required to download them. No records go to public GitHub.
 
-## Deployment model — never replace other hosted sites
+## Deployment on the existing VPS — do not replace Hub Suite or the Caddy gateway
 
-This application exposes only **127.0.0.1:8926** on the VPS, so it cannot conflict with Hub Suite, other sites, or existing reverse proxies. Point a **new** HTTPS host/subdomain at the VPS and proxy its virtual host to `http://127.0.0.1:8926`. Do not overwrite another site's DNS or Nginx configuration. Use `deploy/nginx-site.example.conf` *inside a new matching SSL server block*; DNS and certificate must be configured separately. TLS must be enabled before accepting applications or signing in.
+The app has a dedicated Docker Compose project and continues to bind **127.0.0.1:8926** for a local health check. For the **existing containerized Caddy gateway**, add a second network only after inspecting the gateway's actual attached networks. Caddy cannot reach `127.0.0.1:8926` inside a separate container; it must reach `designweek:8000` over a Docker network shared with the DesignWeek container.
 
-1. Ensure Docker Engine + Compose plugin, Git and your preferred reverse proxy are available.
-2. From a VPS login with Docker access: `mkdir -p ~/apps && git clone https://github.com/Maximad/DesignWeek.git ~/apps/designweek && cd ~/apps/designweek`.
-3. `cp .env.example .env && chmod 600 .env` — replace every placeholder privately. Generate `DW_SECRET_KEY` with `python3 -c 'import secrets;print(secrets.token_urlsafe(48))'`. Generate admin verifier with `python -m server.hash_password` in an environment with Python dependencies installed (or follow the PBKDF2 algorithm in the script); **never put plaintext password or secrets in GitHub**.
-4. Set `DW_ALLOWED_HOSTS` to the exact public host; leave `DW_APPLICATIONS_OPEN=0` until HTTPS and the admin console have been verified. `DW_SECURE_COOKIES=1` must stay enabled.
-5. `bash deploy/vps-deploy.sh`. Check `curl -fsS http://127.0.0.1:8926/healthz`.
-6. Set up a **separate** TLS reverse proxy vhost for the chosen domain, and verify homepage, six `/apply/.../` paths and `/manage/login/` over HTTPS. Test a submission, review/download the private attachment, and remove the test record from the private database through an approved operations procedure.
-7. After verification only, change `DW_APPLICATIONS_OPEN=1` in the **private VPS** `.env` and run `docker compose up -d` to restart with that setting. The homepage then dynamically replaces its static disabled links with active HTTPS category URLs; GitHub Pages remains closed until its public config is pointed to the verified VPS URLs.
+1. Inspect the VPS first (`srv1169365`): `docker ps --format '{{.Names}} {{.Ports}}'`, `docker inspect gateway-caddy-1 --format '{{json .NetworkSettings.Networks}}'`, and check whether ports **80/443** are already handled by Caddy. Do not start another proxy. Ensure no existing Caddy route claims `designweek.nass.life`.
+2. Check `nass.life` DNS and create only the `designweek` **A → 72.62.52.167** record after live address verification; leave unrelated records untouched.
+3. Clone: `mkdir -p ~/apps && git clone https://github.com/Maximad/DesignWeek.git ~/apps/designweek && cd ~/apps/designweek`.
+4. Create private credentials: `cp .env.example .env && chmod 600 .env`. Replace all placeholders with secrets generated *on the VPS*: `DW_SECRET_KEY` (48+ random bytes) and `DW_ADMIN_PASSWORD_HASH` (generated using `python -m server.hash_password`). Keep `DW_ALLOWED_HOSTS=designweek.nass.life`, `DW_APPLICATIONS_OPEN=0`, `DW_SECURE_COOKIES=1`. Do not commit secrets.
+5. Determine an **existing** Docker bridge network to which `gateway-caddy-1` is connected. Set `DW_GATEWAY_NETWORK=ACTUAL_CADDY_NETWORK` in private `.env`. Copy the opt-in overlay: `cp deploy/compose.gateway.example.yml compose.gateway.yml`. The deploy script automatically includes it if present. No other container is modified.
+6. Deploy: `bash deploy/vps-deploy.sh`. Check `curl -fsS http://127.0.0.1:8926/healthz`. Before editing Caddy, test internal reachability from the shared network. If the gateway is not on the chosen network, stop and inspect rather than connecting it blindly.
+7. Add the **new** `designweek.nass.life` site block from `deploy/Caddyfile.designweek.nass.life.example` to the existing gateway Caddyfile beneath `/opt/gateway` using its actual current deployment layout. Validate and reload the existing Caddy process without replacing the configuration of Hub Suite, AzuraCast, other services or `work.habaq.online`. Let Caddy issue TLS after DNS resolves.
+8. Verify the live site over HTTPS, all six `/apply/...` categories, `/privacy/`, `/manage/login/`, access-controlled downloads, a test submission and response management. Confirm TLS and HTTP→HTTPS redirect.
+9. Only after security and access checks: set `DW_APPLICATIONS_OPEN=1` in the private VPS `.env`; run `bash deploy/vps-deploy.sh` again and verify form submission. The public site served by the VPS will then activate its category links; the old GitHub Pages site will stay closed until redirected or linked explicitly.
 
-The VPS service uses no external forms vendors. It is completely independent of Hub Suite and Habaq finances.
+Do not reuse another app's database, upload folder, admin session, gateway credentials or TLS certificates. The DesignWeek data volume remains separate from Hub and Habaq.
 
 ## Update & rollback
 
