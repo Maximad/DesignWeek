@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}تحرير محتوى الموقع — أسبوع التصميم{% endblock %}
+{% block content %}
+<div class="eyebrow">DESIGN WEEK / CONTENT EDITOR</div>
+<h1>تحرير <em>الموقع.</em></h1>
+<p class="lead">عدّل عناوين وأوصاف المحاور والأنشطة والبرنامج والمشاركة والأسئلة. تُحفظ التعديلات في مساحة خاصة وتظهر على الموقع عند إعادة تحميله، دون تعديل الكود.</p>
+<div class="toolbar"><a href="/manage/">← طلبات المشاركة</a><a href="/" target="_blank" rel="noopener noreferrer">معاينة الموقع ↗</a></div>
+{% if saved %}<div class="notice" role="status">حُفظت التعديلات بنجاح. افتح الموقع أو حدّث الصفحة لمعاينتها.</div>{% endif %}
+<nav class="cms-nav" aria-label="أقسام محتوى الموقع">
+{% for name, fields in groups.items() %}
+<a href="/manage/content/?section={{name|urlencode}}" {% if name == active %}aria-current="page"{% endif %}>{{name}} <small>{{fields|length}}</small></a>
+{% endfor %}
+</nav>
+{% if active %}
+<section class="cms-section" aria-labelledby="cms-title">
+<h2 id="cms-title">{{active}}</h2>
+<p class="hint">الحقول تُظهر النص الأصلي أو النص المعدّل. لحذف تعديل وإعادة النص الافتراضي، اترك الحقل فارغاً ثم احفظ. النص فقط؛ لا يُسمح بإضافة HTML.</p>
+<form class="form" method="post" action="/manage/content/">
+<input type="hidden" name="section" value="{{active}}">
+<input type="hidden" name="csrf" value="{{csrf}}">
+{% for field in groups[active] %}
+<label class="cms-field" for="cms-{{loop.index}}">{{field.label}}
+<textarea id="cms-{{loop.index}}" name="{{field.key}}" rows="{% if field.default|length > 145 %}5{% else %}2{% endif %}" maxlength="2500" dir="rtl">{{overrides.get(field.key, field.default)}}</textarea>
+{% if field.key in overrides %}<small class="cms-edited">نص معدل</small>{% else %}<small>النص الافتراضي</small>{% endif %}
+</label>
+{% endfor %}
+<button type="submit" class="submit">حفظ هذا القسم</button>
+</form>
+</section>
+{% endif %}
+{% endblock %}
