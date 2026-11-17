@@ -434,3 +434,18 @@ body.design-atlas{
  .design-atlas .atlas-index>a strong{font-size:clamp(15px,1.5vw,22px)}
  .design-atlas .atlas-index>a span{font-size:12px}
 }
+
+
+/* Accessible inline participation disclosure. Keep it in the same grid as the selected card. */
+.design-atlas .application-detail[hidden]{display:none!important}
+.design-atlas .participation-grid>.application-detail{
+  grid-column:1/-1;
+  width:100%;
+  scroll-margin-top:115px;
+  border-bottom:2px solid #263b2e;
+  animation:designweek-reveal .2s ease-out;
+}
+.design-atlas .participation-card[aria-expanded="true"] .part-arrow{transform:rotate(90deg)}
+.design-atlas .part-arrow{transition:transform .2s ease}
+@keyframes designweek-reveal{from{opacity:.65;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.design-atlas .participation-grid>.application-detail{animation:none}}
