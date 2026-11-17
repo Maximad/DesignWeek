@@ -5,7 +5,7 @@
   const liveContent = window.HUB_DESIGN_WEEK_CONTENT || {};
   const cmsText = (key, fallback) => typeof liveContent[key] === 'string' && liveContent[key].trim()
     ? liveContent[key] : fallback;
-  $('[data-cms-key]').forEach(el => {
+  $$('[data-cms-key]').forEach(el => {
     const value = liveContent[el.dataset.cmsKey];
     if (typeof value === 'string' && value.trim()) el.textContent = value;
   });
@@ -30,7 +30,7 @@
     {number:'02',tag:'سوق التصميم والمشاريع',title:'أفكار تأخذ شكلاً يمكن اقتناؤه.',summary:'يوم مفتوح للمصممين والصنّاع والمشاريع المستقلة، مع فرص للتجريب واللقاء.',items:['سوق منتجات وأعمال تصميمية','عروض تصنيع وتجارب قصيرة للجمهور','موسيقى وضيافة وبرنامج اجتماعي مرافق']},
     {number:'03',tag:'الختام وما بعده',title:'ما الذي يمكن أن نصنعه بعد ذلك؟',summary:'عرض النتائج وتبادل الأفكار حول تحويل اللقاء إلى فرص تعاون وإنتاج لاحقة.',items:['استمرار المعرض والأعمال المنتقاة','نتائج الورشات وجلسة تقييم مشتركة','لقاء حول مستقبل هَبّ كونكريت وأسبوع التصميم']}
   ];
-  const tabs = $('.day-tab');
+  const tabs = $$('.day-tab');
   days.forEach((day, i) => {
     for (const field of ['tag', 'title', 'summary']) {
       day[field] = cmsText(`program.${i}.${field}`, day[field]);
