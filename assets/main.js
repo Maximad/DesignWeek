@@ -2,6 +2,13 @@
   'use strict';
   const $ = (s, ctx = document) => ctx.querySelector(s);
   const $$ = (s, ctx = document) => [...ctx.querySelectorAll(s)];
+  const liveContent = window.HUB_DESIGN_WEEK_CONTENT || {};
+  const cmsText = (key, fallback) => typeof liveContent[key] === 'string' && liveContent[key].trim()
+    ? liveContent[key] : fallback;
+  $('[data-cms-key]').forEach(el => {
+    const value = liveContent[el.dataset.cmsKey];
+    if (typeof value === 'string' && value.trim()) el.textContent = value;
+  });
   const nav = $('#site-nav');
   const toggle = $('.nav-toggle');
   if (toggle && nav) {
@@ -17,13 +24,19 @@
     }));
   }
   const days = [
-    {number:'25',tag:'الافتتاح والمعرض',title:'نفتح الأبواب للأفكار.',summary:'افتتاح المعرض الجماعي، والتعرّف على الفنانين والمصممين والأعمال والمساحات.',items:['معرض الفن المعاصر والتصميم','أعمال وتجارب من مشروعات الإنتاج','لقاء افتتاحي وبرنامج مرافق']},
-    {number:'26',tag:'الورشات والتجريب',title:'نتعلّم بأيدينا.',summary:'مساحة للعمل المشترك وتجربة المواد والأساليب، مع لقاءات حول عملية التصميم.',items:['ورشات في المواد والتشكيل والتصميم','جلسات في الغرافيك والتصميم المكاني','نقاشات مع فنانين ومصممين']},
-    {number:'27',tag:'الأزياء والتصميم القابل للارتداء',title:'التصميم الذي نرتديه.',summary:'استكشاف الأزياء والإكسسوارات والحُلي والتجارب البصرية المرتبطة بها.',items:['عرض أو تقديم مجموعات وتصاميم مختارة','أعمال إكسسوارات وقطع قابلة للارتداء','حوار وتجربة أداء أو موسيقى مرافقة']},
-    {number:'28',tag:'سوق التصميم والمشاريع',title:'أفكار تأخذ شكلاً يمكن اقتناؤه.',summary:'يوم مفتوح للمصممين والصنّاع والمشاريع المستقلة، مع فرص للتجريب واللقاء.',items:['سوق منتجات وأعمال تصميمية','عروض تصنيع وتجارب قصيرة للجمهور','موسيقى وضيافة وبرنامج اجتماعي مرافق']},
-    {number:'29',tag:'الختام وما بعده',title:'ما الذي يمكن أن نصنعه بعد ذلك؟',summary:'عرض النتائج وتبادل الأفكار حول تحويل اللقاء إلى فرص تعاون وإنتاج لاحقة.',items:['استمرار المعرض والأعمال المنتقاة','نتائج الورشات وجلسة تقييم مشتركة','لقاء حول مستقبل هَبّ كونكريت وأسبوع التصميم']}
+    {number:'29',tag:'الافتتاح والمعرض',title:'نفتح الأبواب للأفكار.',summary:'افتتاح المعرض الجماعي، والتعرّف على الفنانين والمصممين والأعمال والمساحات.',items:['معرض الفن المعاصر والتصميم','أعمال وتجارب من مشروعات الإنتاج','لقاء افتتاحي وبرنامج مرافق']},
+    {number:'30',tag:'الورشات والتجريب',title:'نتعلّم بأيدينا.',summary:'مساحة للعمل المشترك وتجربة المواد والأساليب، مع لقاءات حول عملية التصميم.',items:['ورشات في المواد والتشكيل والتصميم','جلسات في الغرافيك والتصميم المكاني','نقاشات مع فنانين ومصممين']},
+    {number:'01',tag:'الأزياء والتصميم القابل للارتداء',title:'التصميم الذي نرتديه.',summary:'استكشاف الأزياء والإكسسوارات والحُلي والتجارب البصرية المرتبطة بها.',items:['عرض أو تقديم مجموعات وتصاميم مختارة','أعمال إكسسوارات وقطع قابلة للارتداء','حوار وتجربة أداء أو موسيقى مرافقة']},
+    {number:'02',tag:'سوق التصميم والمشاريع',title:'أفكار تأخذ شكلاً يمكن اقتناؤه.',summary:'يوم مفتوح للمصممين والصنّاع والمشاريع المستقلة، مع فرص للتجريب واللقاء.',items:['سوق منتجات وأعمال تصميمية','عروض تصنيع وتجارب قصيرة للجمهور','موسيقى وضيافة وبرنامج اجتماعي مرافق']},
+    {number:'03',tag:'الختام وما بعده',title:'ما الذي يمكن أن نصنعه بعد ذلك؟',summary:'عرض النتائج وتبادل الأفكار حول تحويل اللقاء إلى فرص تعاون وإنتاج لاحقة.',items:['استمرار المعرض والأعمال المنتقاة','نتائج الورشات وجلسة تقييم مشتركة','لقاء حول مستقبل هَبّ كونكريت وأسبوع التصميم']}
   ];
-  const tabs = $$('.day-tab');
+  const tabs = $('.day-tab');
+  days.forEach((day, i) => {
+    for (const field of ['tag', 'title', 'summary']) {
+      day[field] = cmsText(`program.${i}.${field}`, day[field]);
+    }
+    day.items = day.items.map((item, j) => cmsText(`program.${i}.item.${j}`, item));
+  });
   function activateDay(idx, focus = false) {
     const d = days[idx]; if (!d) return;
     tabs.forEach((tab,i) => {
@@ -39,7 +52,7 @@
     $('#panel-title').textContent = d.title;
     $('#panel-summary').textContent = d.summary;
     $('#panel-list').replaceChildren(...d.items.map(s => {const li=document.createElement('li');li.textContent=s;return li;}));
-    $('.schedule-overline').textContent = `DAY 0${idx+1} / NOVEMBER 2026`;
+    $('.schedule-overline').textContent = `DAY 0${idx+1} / ${idx < 2 ? 'NOVEMBER' : 'DECEMBER'} 2026`;
   }
   tabs.forEach((tab, idx) => {
     tab.addEventListener('click', () => activateDay(idx));
@@ -60,26 +73,67 @@
     crew:{title:'أنضم إلى التنظيم',desc:'لمن يرغب بالمساعدة في الإنتاج والتنسيق والاستقبال والتوثيق والعمل الجماعي. أي تكليف يعتمد على الحاجة والاتفاق.',requirements:['الخبرة أو المهارات التي يمكن المساهمة بها','الأيام وساعات التوفر','الاختصاص المفضل (إنتاج، توثيق، استقبال...)','أي احتياجات وصول أو تجهيز مهمة للعمل']}
   };
   const config = window.HUB_DESIGN_WEEK_CONFIG || {applicationsOpen:false,formUrls:{}};
+  Object.entries(types).forEach(([slug, info]) => {
+    info.title = cmsText(`participate.${slug}.title`, info.title);
+    info.desc = cmsText(`participate.${slug}.details.description`, info.desc);
+    info.requirements = info.requirements.map((requirement, i) =>
+      cmsText(`participate.${slug}.requirement.${i}`, requirement));
+  });
   const buttons = $$('.participation-card');
+  const detail = $('#application-detail');
+  const grid = $('#participation-grid');
   buttons.forEach(btn => btn.addEventListener('click', () => {
-    buttons.forEach(other => other.setAttribute('aria-pressed', String(other === btn)));
-    const type = btn.dataset.type; const info = types[type]; if (!info) return;
+    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+    buttons.forEach(other => {
+      other.setAttribute('aria-pressed', 'false');
+      other.setAttribute('aria-expanded', 'false');
+    });
+    if (isExpanded) {
+      detail.hidden = true;
+      grid.after(detail);
+      return;
+    }
+    const type = btn.dataset.type;
+    const info = types[type];
+    if (!info) return;
+    btn.setAttribute('aria-pressed', 'true');
+    btn.setAttribute('aria-expanded', 'true');
     $('#application-title').textContent = info.title;
     $('#application-desc').textContent = info.desc;
-    $('#application-requirements').replaceChildren(...info.requirements.map(s=>{const li=document.createElement('li');li.textContent=s;return li;}));
+    $('#application-requirements').replaceChildren(...info.requirements.map(value => {
+      const li = document.createElement('li');
+      li.textContent = value;
+      return li;
+    }));
     const link = $('#application-link');
     const url = config.applicationsOpen && config.formUrls && config.formUrls[type];
-    if(typeof url === 'string' && /^https:\/\//.test(url)) {
-      link.textContent = 'انتقل إلى استمارة التقديم ↗'; link.href=url;
-      link.target='_blank'; link.rel='noopener noreferrer';
-      link.removeAttribute('aria-disabled'); link.removeAttribute('tabindex');
+    if (typeof url === 'string' && /^https:\/\//.test(url)) {
+      link.textContent = 'انتقل إلى استمارة التقديم ↗';
+      link.href = url;
+      link.removeAttribute('aria-disabled');
+      link.removeAttribute('tabindex');
+      link.removeAttribute('target');
+      link.removeAttribute('rel');
       link.classList.add('btn-live');
     } else {
-      link.textContent = 'استقبال الطلبات لم يُفتح بعد';link.href='#participate';
-      link.setAttribute('aria-disabled','true'); link.setAttribute('tabindex','-1');
-      link.removeAttribute('target');link.removeAttribute('rel');link.classList.remove('btn-live');
+      link.textContent = 'استقبال الطلبات لم يُفتح بعد';
+      link.href = '#participate';
+      link.setAttribute('aria-disabled','true');
+      link.setAttribute('tabindex','-1');
+      link.removeAttribute('target');
+      link.removeAttribute('rel');
+      link.classList.remove('btn-live');
     }
-    if(window.innerWidth < 768) $('#application-detail').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'nearest'});
+    // An inline disclosure moves directly beneath the selected card. Scroll so
+    // its opening is never invisible below the viewport or sticky navigation.
+    btn.after(detail);
+    detail.hidden = false;
+    requestAnimationFrame(() => {
+      detail.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    });
   }));
   const share = $('#share-button');
   if(share) share.addEventListener('click', async () => {
