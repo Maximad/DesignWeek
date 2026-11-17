@@ -95,3 +95,52 @@ def test_csv_injection_prevention():
     assert dw.csv_safe('+1+1').startswith("'")
     assert dw.csv_safe('@SUM(A1)').startswith("'")
     assert dw.csv_safe('ordinary text') == 'ordinary text'
+
+
+def test_content_editor_requires_login_and_persists_changes():
+    import re
+    fields = dw.all_fields()
+    keys = {field['key'] for field in fields}
+    assert len(keys) > 75
+    assert 'program.0.title' in keys
+    assert 'program.4.item.2' in keys
+    assert 'participate.artist.details.description' in keys
+    assert 'tracks.materials.description' in keys
+    assert 'faq.1.question' in keys
+    group = 'البرنامج — اليوم 1'
+    with TestClient(dw.app, base_url='https://testserver') as client:
+        denied = client.get('/manage/content/', follow_redirects=False)
+        assert denied.status_code == 303
+        denied_post = client.post('/manage/content/', data={'section': group})
+        assert denied_post.status_code == 403
+        login_page = client.get('/manage/login/')
+        login_token = re.search(r'name="csrf" value="([^"]+)', login_page.text).group(1)
+        ok = client.post('/manage/login/', data={
+            'username': 'admin', 'password': PASSWORD, 'csrf': login_token,
+        }, follow_redirects=True)
+        assert ok.status_code == 200
+        editor = client.get('/manage/content/?section=' + __import__('urllib.parse', fromlist=['quote']).quote(group))
+        assert editor.status_code == 200 and 'تحرير' in editor.text
+        token = re.search(r'name="csrf" value="([^"]+)', editor.text).group(1)
+        modified = 'افتتاح التصميم التجريبي — عنوان مخصص'
+        invalid = client.post('/manage/content/', data={
+            'section': group, 'csrf': 'wrong', 'program.0.title': modified,
+        }, follow_redirects=False)
+        assert invalid.status_code == 403
+        save = client.post('/manage/content/', data={
+            'section': group, 'csrf': token,
+            'program.0.title': modified,
+        }, follow_redirects=False)
+        assert save.status_code == 303
+        content = client.get('/content-config.js')
+        assert content.status_code == 200 and modified in content.text
+        assert content.headers['cache-control'] == 'no-store'
+        assert 'content-config.js' in client.get('/').text
+        with dw.connect() as db:
+            assert db.execute("SELECT value FROM site_content WHERE key='program.0.title'").fetchone()[0] == modified
+        cleared = client.post('/manage/content/', data={
+            'section': group, 'csrf': token, 'program.0.title': '',
+        }, follow_redirects=False)
+        assert cleared.status_code == 303
+        assert modified not in client.get('/content-config.js').text
+        assert '<script defer src="./content-config.js"></script>' in client.get('/').text

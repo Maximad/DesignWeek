@@ -26,6 +26,7 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Resp
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
+from .site_content import all_fields, field_groups
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
@@ -101,6 +102,9 @@ def init_db() -> None:
             file_path TEXT, file_name TEXT, file_type TEXT, file_size INTEGER NOT NULL DEFAULT 0)""")
         db.execute("CREATE INDEX IF NOT EXISTS ix_app_created ON applications(created_at)")
         db.execute("CREATE INDEX IF NOT EXISTS ix_app_status ON applications(status, category)")
+        db.execute("""CREATE TABLE IF NOT EXISTS site_content (
+            key TEXT PRIMARY KEY, value TEXT NOT NULL, changed_at TEXT NOT NULL
+        )""")
         db.execute("""CREATE TABLE IF NOT EXISTS limits (
             token TEXT PRIMARY KEY, start_epoch INTEGER NOT NULL, count INTEGER NOT NULL)""")
         db.commit()
@@ -221,14 +225,25 @@ def home():
     # catalogue gets real, category-specific links to the private intake.
     doc = (ROOT / "index.html").read_text(encoding="utf-8")
     doc = doc.replace('<script defer src="./assets/site-config.js"></script>',
-                      '<script defer src="./runtime-config.js"></script>')
+                      '<script defer src="./runtime-config.js"></script>\n  <script defer src="./content-config.js"></script>')
     if APPLICATIONS_OPEN:
         doc = doc.replace("طلبات المشاركة الإلكترونية ستُفتح لاحقاً", "طلبات المشاركة الإلكترونية مفتوحة الآن")
         doc = doc.replace("حتى ذلك الحين، يمكنك معرفة ما يتطلبه كل نوع من المشاركات وتحضير وصف مشروعك وأعمالك. لا تُجمع أي بيانات شخصية عبر هذه الصفحة حالياً.",
                           "اختر نوع المشاركة، راجع المعلومات المطلوبة، ثم انتقل إلى استمارة التقديم. تُحفظ الطلبات بشكل خاص للمراجعة.")
         doc = doc.replace("سنوضح لك المعلومات الأساسية المطلوبة للبدء، ثم نضيف رابط التقديم الإلكتروني عند تفعيله.",
                           "اختر نوع المشاركة لمعرفة المعلومات المطلوبة ثم انتقل إلى الاستمارة الإلكترونية.")
-    return HTMLResponse(doc)
+        doc = doc.replace("نسخة تعريفية قابلة للتحديث — لم تُفتح الطلبات الإلكترونية بعد.",
+                          "طلبات المشاركة الإلكترونية مفتوحة الآن.")
+    return HTMLResponse(doc, headers={"Cache-Control": "no-store"})
+
+
+@app.get("/content-config.js", include_in_schema=False)
+def public_content():
+    allowed = {field["key"] for field in all_fields()}
+    with connect() as db:
+        values = {row["key"]: row["value"] for row in db.execute("SELECT key,value FROM site_content") if row["key"] in allowed}
+    payload = json.dumps(values, ensure_ascii=False).replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
+    return Response("window.HUB_DESIGN_WEEK_CONTENT = Object.freeze(" + payload + ");", media_type="application/javascript", headers={"Cache-Control": "no-store"})
 
 
 @app.get("/runtime-config.js", include_in_schema=False)
@@ -327,6 +342,51 @@ async def application_submit(request: Request, category: str,
 @app.get("/privacy/", response_class=HTMLResponse)
 def privacy(request: Request):
     return render(request, "privacy.html")
+
+
+@app.get("/manage/content/", response_class=HTMLResponse)
+def edit_site_content(request: Request, section: str = "", saved: str = ""):
+    if not authenticated(request):
+        return RedirectResponse("/manage/login/", status_code=303)
+    groups = field_groups()
+    if section not in groups:
+        section = next(iter(groups), "")
+    with connect() as db:
+        overrides = {row["key"]: row["value"] for row in db.execute("SELECT key,value FROM site_content")}
+    return render(
+        request, "content-editor.html", groups=groups, overrides=overrides,
+        active=section, saved=saved == "1", csrf=token_for("content:" + section),
+    )
+
+
+@app.post("/manage/content/")
+async def save_site_content(request: Request):
+    require_admin(request)
+    form = await request.form()
+    section = str(form.get("section", ""))
+    groups = field_groups()
+    if section not in groups:
+        raise HTTPException(400, "Unknown content section")
+    require_csrf(str(form.get("csrf", "")), "content:" + section)
+    changes = []
+    for field in groups[section]:
+        key = field["key"]
+        value = str(form.get(key, "")).strip()
+        if len(value) > 2500 or any(c in value for c in ("\\x00", "\\x1b")):
+            raise HTTPException(400, "Content is too long or contains prohibited characters")
+        changes.append((key, value if value and value != field["default"] else None))
+    with connect() as db:
+        for key, value in changes:
+            if value is None:
+                db.execute("DELETE FROM site_content WHERE key=?", (key,))
+            else:
+                db.execute(
+                    "INSERT INTO site_content(key,value,changed_at) VALUES(?,?,?) "
+                    "ON CONFLICT(key) DO UPDATE SET value=excluded.value,changed_at=excluded.changed_at",
+                    (key, value, utcnow()),
+                )
+        db.commit()
+    return RedirectResponse("/manage/content/?" + urlencode({"section": section, "saved": "1"}), status_code=303)
 
 
 @app.get("/manage/login/", response_class=HTMLResponse)

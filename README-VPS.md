@@ -2,7 +2,7 @@
 
 This repository keeps the original Arabic editorial landing page intact on GitHub Pages and adds an independent, production-ready **FastAPI + SQLite** intake service for a Hostinger VPS. The service serves the same `index.html` and `assets/` on an isolated host, plus application forms and the private review desk.
 
-## Canonical project address — designweek.nass.life (deployment pending)
+## Canonical project address — designweek.nass.life (live on VPS; confirmed 17 Nov 2026)
 
 **Chosen hostname:** `designweek.nass.life` for the public Arabic catalogue, six application forms, and private coordinator review desk. The previously documented Hostinger VPS is `srv1169365`, last reported at public IPv4 **72.62.52.167** (14 November 2026). Confirm this VPS address and the current DNS zone before updating anything; no live DNS or SSH access was available during this ChatGPT run.
 
@@ -61,3 +61,36 @@ The Hostinger integration used in the current ChatGPT session did not expose VPS
 - Admin CSV export guards against spreadsheet formula injection.
 - Admin requests set `Cache-Control: no-store`; response headers prevent content sniffing, framing and third-party embeds.
 - Maintain an offsite backup, limited staff access, privacy retention schedule and a server update routine. These still need operational ownership.
+
+## Editing festival content from the private dashboard
+
+The VPS-hosted DesignWeek site has an Arabic copy editor at
+`https://designweek.nass.life/manage/content/` (linked from `/manage/`).
+Sign in with the existing admin credentials. Choose a section (programme day,
+creative track, participation format, principles, FAQ, main description, etc.),
+edit headings/descriptions/activities as plain text, then click save.
+Each section saves independently and changes appear after reloading the public
+site, without rebuilding the image. To restore a default, clear its field and
+save. All overrides live in the existing private `/data/applications.sqlite3`
+volume alongside applications; backup and restore both together.
+
+The five-day programme is set for **29 November–3 December 2026**.
+The six participation cards expand inline with application details and the live
+intake link. **The editor updates existing copy and programme entries only**;
+creating new days, events, upload components or changing the calendar date
+structure still requires code changes.
+
+Deployment after a merged PR (from the Hostinger VPS terminal):
+
+```bash
+cd /root/apps/designweek
+bash deploy/vps-deploy.sh
+docker compose -f compose.yml -f compose.gateway.yml ps
+curl -fsS https://designweek.nass.life/healthz
+```
+
+The deployment script updates only DesignWeek, retaining the private `.env`,
+SQLite volume, and the existing Caddy/network setup. Rebuilding temporarily
+recreates the DesignWeek container; retry health checks after it starts.
+The private backup script is `bash deploy/backup.sh`; check the output and
+keep encrypted offsite copies. A GitHub merge alone does **not** update the VPS.
