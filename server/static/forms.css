@@ -12,3 +12,32 @@
 .cms-field textarea{font-weight:400;line-height:1.9;min-height:75px}
 .cms-field small{font-size:11px;font-weight:400;color:#586558}
 .cms-field .cms-edited{color:#A14E2E;font-weight:700}
+
+
+/* Full-site editor: clear section list and searchable plain-text fields. */
+.cms-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:28px;margin-block:26px}
+.cms-sidebar{min-width:0}
+.cms-sidebar>label,.cms-search-label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+#cms-nav-search,#cms-field-search{width:100%;border:1.5px solid var(--line);background:#F8F5EC;padding:11px 13px;color:var(--ink);font:inherit;min-height:46px}
+.cms-sidebar .cms-nav{display:flex;flex-direction:column;flex-wrap:nowrap;gap:4px;border:0;margin:13px 0;padding:0;max-height:440px;overflow-y:auto}
+.cms-sidebar .cms-nav a{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid transparent;padding:11px;background:#E0E2D4}
+.cms-sidebar .cms-nav a:hover{border-color:var(--line)}
+.cms-sidebar .cms-nav a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.cms-sidebar .cms-nav a[hidden],.cms-fields .cms-field[hidden]{display:none!important}
+.cms-section{max-width:none;min-width:0}
+.cms-section-head{display:flex;gap:15px;align-items:end;justify-content:space-between;flex-wrap:wrap;border-bottom:2px solid var(--line);padding-bottom:18px;margin-bottom:20px}
+.cms-section-head h2{margin:9px 0 0}
+.cms-section-head>a{font-weight:700;font-size:13px;text-decoration:none;border-bottom:1px solid var(--rust)}
+.cms-section .hint{margin-block:14px 20px}
+.cms-fields{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;margin-block:24px}
+.cms-field{padding:14px;background:#F4F2E9;border:1px solid #CAD0C3;margin:0!important}
+.cms-field span{font-weight:700}
+.cms-field textarea{min-height:74px;margin-top:10px}
+.cms-actions{display:flex;flex-wrap:wrap;align-items:center;gap:18px;border-top:2px solid var(--line);padding-top:18px}
+.cms-actions span{color:#566557;font-size:12px}
+@media(min-width:850px){.cms-layout{grid-template-columns:250px minmax(0,1fr);gap:36px;align-items:start}.cms-sidebar{position:sticky;top:16px}.cms-sidebar .cms-nav{max-height:72vh}.cms-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cms-field:has(textarea[rows="5"]){grid-column:1/-1}}
+
+/* Login: browser password manager compatible, without public secret storage. */
+.reveal-password{display:inline-flex;margin:0 0 18px;padding:7px 0;border:0;border-bottom:1px solid currentColor;color:var(--ink);background:transparent;font-weight:700;font-size:12px}
+.login-submit{margin:2px 0 28px}
+.form.narrow input[name="username"],.form.narrow input[name="password"]{width:100%;background:#F8F5ED;border:1.5px solid #657665;padding:12px 13px;min-height:49px}

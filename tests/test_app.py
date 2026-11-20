@@ -144,3 +144,40 @@ def test_content_editor_requires_login_and_persists_changes():
         assert cleared.status_code == 303
         assert modified not in client.get('/content-config.js').text
         assert '<script defer src="./content-config.js"></script>' in client.get('/').text
+
+
+
+def test_requested_arabic_copy_and_complete_editor_navigation():
+    import re
+    html = (dw.ROOT / 'index.html').read_text(encoding='utf-8')
+    assert 'بتقدر تكون جزء من الأسبوع' in html
+    assert 'بوحدة من هي الطرق:' in html
+    assert 'نبحث عن:' in html
+    assert 'الفكرة بتكبر' in html
+    assert 'بناس هب.' in html
+    fields = dw.all_fields()
+    keys = {field['key'] for field in fields}
+    assert len(fields) > 150
+    for key in [
+        'nav.about', 'hero.status', 'index.title', 'place.link',
+        'participate.headline1', 'participate.headline2',
+        'standards.title', 'closing.title1', 'closing.title2',
+        'footer.org', 'program.4.title', 'participate.crew.requirement.2'
+    ]:
+        assert key in keys
+    with TestClient(dw.app, base_url='https://testserver') as client:
+        login = client.get('/manage/login/')
+        assert 'autocomplete="current-password"' in login.text
+        assert 'autocomplete="username"' in login.text
+        assert 'value="admin"' in login.text
+        assert 'deploy/reset-admin-password.sh' in login.text
+        token = re.search(r'name="csrf" value="([^"]+)', login.text).group(1)
+        good = client.post('/manage/login/', data={
+            'username':'admin', 'password': PASSWORD, 'csrf': token
+        }, follow_redirects=True)
+        assert good.status_code == 200
+        editor = client.get('/manage/content/?section=%D8%A7%D9%84%D8%AA%D9%86%D9%82%D9%84')
+        assert editor.status_code == 200
+        assert 'cms-field-search' in editor.text
+        assert 'cms-nav-search' in editor.text
+        assert 'data-search-text' in editor.text
