@@ -1,0 +1,167 @@
+/* Design Week / FAQ: large, legible Arabic questions with a receding type echo.
+   Loaded last intentionally: the base FAQ styles rotate every summary span. */
+.design-atlas .faq-section{
+  background:#eee9dc;
+  color:#293a2e;
+}
+.design-atlas .faq-list{
+  width:100%;
+  border-top:1px solid #435847;
+}
+.design-atlas .faq-list details{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border-bottom:1px solid #6d7b6d;
+}
+.design-atlas .faq-list summary{
+  position:relative;
+  z-index:2;
+  width:100%;
+  display:grid;
+  grid-template-columns:clamp(28px,3.2vw,48px) minmax(0,1fr) 38px;
+  align-items:center;
+  column-gap:clamp(10px,1.5vw,24px);
+  direction:rtl;
+  text-align:right;
+  padding:clamp(24px,3vw,43px) 0;
+  list-style:none;
+  cursor:pointer;
+}
+.design-atlas .faq-list summary::-webkit-details-marker{display:none}
+.design-atlas .faq-list summary::marker{content:''}
+.design-atlas .faq-list summary::before{
+  align-self:center;
+  justify-self:start;
+  color:#b55736;
+  font-size:13px;
+  line-height:1;
+}
+.design-atlas .faq-list summary .faq-question{
+  display:block;
+  min-width:0;
+  margin:0;
+  font-family:"Alexandria","IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;
+  font-size:clamp(24px,2.7vw,43px);
+  font-weight:800;
+  line-height:1.48;
+  letter-spacing:-.025em;
+  color:#26392d;
+  text-align:right;
+  overflow-wrap:break-word;
+  transform:none;
+  filter:none;
+  opacity:1;
+  transition:opacity .55s ease,color .3s ease;
+}
+.design-atlas .faq-list summary .faq-toggle{
+  display:grid;
+  place-items:center;
+  justify-self:end;
+  width:36px;
+  height:36px;
+  margin:0;
+  border:1px solid currentColor;
+  border-radius:50%;
+  font-family:"Space Grotesk",sans-serif;
+  font-size:24px;
+  line-height:1;
+  font-weight:500;
+  color:#b55736;
+  transition:transform .45s cubic-bezier(.22,1,.36,1),background-color .3s ease;
+}
+.design-atlas .faq-list details[open] summary .faq-question{
+  /* Never rotate or distort the actual, readable question. */
+  transform:none;
+  opacity:.58;
+  color:#47584a;
+}
+.design-atlas .faq-list details[open] summary .faq-toggle{
+  transform:rotate(45deg);
+  background-color:rgba(181,87,54,.1);
+}
+.design-atlas .faq-list summary:hover .faq-question{color:#b55736}
+.design-atlas .faq-list summary:focus-visible{
+  outline:2px solid #b55736;
+  outline-offset:-3px;
+}
+.design-atlas .faq-list .faq-echo{
+  position:absolute;
+  z-index:0;
+  inset-block-start:clamp(100px,11vw,154px);
+  inset-inline:clamp(34px,5vw,80px) 20px;
+  display:block;
+  pointer-events:none;
+  user-select:none;
+  text-align:right;
+  direction:rtl;
+  font-family:"Alexandria","IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;
+  font-size:clamp(50px,7vw,112px);
+  font-weight:800;
+  line-height:1.25;
+  letter-spacing:-.035em;
+  overflow-wrap:break-word;
+  color:#b95a38;
+  opacity:.09;
+  filter:blur(2.2px);
+  transform-origin:right top;
+  transform:translate3d(0,18px,0) scale(1.13);
+  animation:faq-recede .72s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes faq-recede{
+  from{opacity:0;filter:blur(0);transform:translate3d(0,0,0) scale(.96)}
+  to{opacity:.09;filter:blur(2.2px);transform:translate3d(0,18px,0) scale(1.13)}
+}
+.design-atlas .faq-list details>p{
+  position:relative;
+  z-index:1;
+  width:min(100%,1080px);
+  max-width:none;
+  margin-block:0;
+  margin-inline-start:clamp(39px,5.1vw,74px);
+  margin-inline-end:0;
+  padding:0 0 clamp(33px,4.5vw,63px);
+  font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;
+  font-size:clamp(15px,1.35vw,19px);
+  line-height:2;
+  text-align:right;
+  color:#31473a;
+}
+@media(max-width:639px){
+  .design-atlas .faq-list summary{
+    grid-template-columns:25px minmax(0,1fr) 32px;
+    column-gap:9px;
+    padding-block:24px;
+  }
+  .design-atlas .faq-list summary .faq-question{
+    font-size:clamp(21px,5.5vw,27px);
+    letter-spacing:0;
+    line-height:1.65;
+  }
+  .design-atlas .faq-list summary .faq-toggle{
+    width:30px;
+    height:30px;
+    font-size:20px;
+  }
+  .design-atlas .faq-list .faq-echo{
+    inset-block-start:100px;
+    inset-inline:25px 12px;
+    font-size:clamp(43px,10vw,65px);
+  }
+  .design-atlas .faq-list details>p{
+    margin-inline-start:35px;
+    padding-bottom:32px;
+    font-size:15px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .design-atlas .faq-list summary .faq-question,
+  .design-atlas .faq-list summary .faq-toggle{
+    transition:none;
+  }
+  .design-atlas .faq-list .faq-echo{
+    animation:none;
+    transform:none;
+    filter:blur(1px);
+  }
+}
