@@ -215,3 +215,18 @@ def test_ecosystem_roles_and_supplied_brand_assets():
         assert client.get('/').status_code == 200
         for filename in files:
             assert client.get('/assets/brands/' + filename).status_code == 200
+
+
+def test_ecosystem_logos_use_compact_responsive_four_card_grid():
+    """All four brands are peer cards with constrained artwork and refreshed CSS."""
+    import re
+    page = (dw.ROOT / 'index.html').read_text(encoding='utf-8')
+    section = page.split('id="ecosystem"', 1)[1].split('id="program"', 1)[0]
+    assert len(re.findall(r'<article class="ecosystem-role ', section)) == 4
+    assert len(re.findall(r'class="ecosystem-logo ecosystem-logo-', section)) == 4
+    assert 'atlas.css?v=20261120-ecosystem-4' in page
+    css = (dw.ROOT / 'assets' / 'atlas.css').read_text(encoding='utf-8')
+    assert 'grid-template-columns:repeat(4,minmax(0,1fr))' in css
+    assert 'grid-template-columns:repeat(2,minmax(0,1fr))' in css
+    assert 'max-height:104px' in css
+    assert 'overflow:hidden' in css

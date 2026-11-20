@@ -451,88 +451,135 @@ body.design-atlas{
 @media(prefers-reduced-motion:reduce){.design-atlas .participation-grid>.application-detail{animation:none}}
 
 
-/* Organizational identity: separate host, collective/Nas organizing, media coverage. */
+/* Ecosystem: four equal, compact brand cards; each logo has the same visual frame. */
 .design-atlas .ecosystem-section{
   max-width:none;
-  padding:clamp(72px,9vw,132px) clamp(19px,4.5vw,78px);
-  background:#d9ddce;color:#27372b;border-top:2px solid #263a2d;
-  border-bottom:2px solid #263a2d;
+  padding:clamp(54px,6vw,92px) clamp(19px,4.5vw,78px);
+  background:#d9ddce;
+  color:#27372b;
+  border-block:2px solid #263a2d;
 }
-.design-atlas .ecosystem-intro,.design-atlas .ecosystem-roles{
-  max-width:1424px;margin-inline:auto;
+.design-atlas .ecosystem-intro,
+.design-atlas .ecosystem-roles{
+  width:100%;
+  max-width:1424px;
+  margin-inline:auto;
 }
 .design-atlas .ecosystem-intro{
-  display:flex;flex-direction:column;align-items:flex-start;gap:18px;
-  padding-bottom:36px;border-bottom:2px solid #2b3a30;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:12px;
+  padding-bottom:24px;
+  border-bottom:1px solid #7f8c79;
 }
 .design-atlas .ecosystem-intro h2{
-  font-size:clamp(37px,5.2vw,70px);line-height:1.2;
+  font-size:clamp(34px,4vw,55px);
+  line-height:1.25;
 }
 .design-atlas .ecosystem-period{color:#ba5d3d}
 .design-atlas .ecosystem-intro>p{
-  font-size:clamp(13px,1.4vw,16px);max-width:460px;
-  line-height:1.95;color:#435443;
+  font-size:clamp(13px,1.2vw,15px);
+  max-width:475px;
+  line-height:1.85;
+  color:#435443;
 }
 .design-atlas .ecosystem-roles{
-  display:grid;grid-template-columns:1fr;gap:0;
-  border-inline-start:1px solid #526454;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-top:24px;
 }
 .design-atlas .ecosystem-role{
-  min-width:0;display:flex;flex-direction:column;
-  padding:24px clamp(18px,2.2vw,32px) 32px;
-  border-inline-end:1px solid #526454;
-  border-bottom:1px solid #526454;
+  box-sizing:border-box;
+  min-width:0;
+  min-height:290px;
+  display:flex;
+  flex-direction:column;
+  padding:clamp(16px,2vw,26px);
+  border:1px solid #899485;
   background:#e9e7da;
 }
-.design-atlas .ecosystem-organizers{background:#e2e6d8}
+.design-atlas .ecosystem-habaq{background:#e2e6d8}
+.design-atlas .ecosystem-nas{background:#e5e5d7}
 .design-atlas .ecosystem-media{background:#e8e1d3}
 .design-atlas .ecosystem-role-top{
-  display:flex;align-items:center;justify-content:space-between;gap:15px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:12px;
+  border-bottom:1px solid #a8b0a2;
   font-family:"Space Grotesk","IBM Plex Sans Arabic",sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.03em;
-  padding-bottom:17px;border-bottom:1px solid #899485;color:#4c5b4b;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#4c5b4b;
 }
-.design-atlas .ecosystem-role-top span:first-child{font-size:10px;letter-spacing:.12em;direction:ltr}
-.design-atlas .ecosystem-role-top span:last-child{color:#9d4d31;font-family:"IBM Plex Sans Arabic",sans-serif}
+.design-atlas .ecosystem-role-top span:first-child{
+  font-size:10px;
+  letter-spacing:.09em;
+  direction:ltr;
+  white-space:nowrap;
+}
+.design-atlas .ecosystem-role-top span:last-child{
+  color:#9d4d31;
+  font-family:"IBM Plex Sans Arabic",sans-serif;
+}
 .design-atlas .ecosystem-logo{
-  display:flex;align-items:center;justify-content:center;
-  min-height:160px;margin:13px 0 8px;
+  box-sizing:border-box;
+  width:100%;
+  height:132px;
+  min-height:132px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  margin:14px 0 9px;
 }
-.design-atlas .ecosystem-logo img{
-  display:block;width:auto;height:auto;object-fit:contain;max-width:100%;
-  max-height:125px;
+.design-atlas .ecosystem-logo img,
+.design-atlas .ecosystem-logo-hub img,
+.design-atlas .ecosystem-logo-habaq img,
+.design-atlas .ecosystem-logo-nas img,
+.design-atlas .ecosystem-logo-media img{
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:min(100%,215px);
+  max-height:104px;
+  object-fit:contain;
 }
-.design-atlas .ecosystem-logo-hub img{max-height:128px}
-.design-atlas .ecosystem-logo-media img{max-height:115px}
 .design-atlas .ecosystem-role h3{
-  font-size:clamp(20px,2vw,27px);line-height:1.4;
-  color:#25362b;margin:12px 0 8px;
+  margin:2px 0 8px;
+  font-size:clamp(18px,1.7vw,23px);
+  line-height:1.45;
+  color:#25362b;
 }
 .design-atlas .ecosystem-role>p{
-  font-size:13px;line-height:1.95;color:#4e5e50;
-  margin-top:auto;
+  margin:0;
+  font-size:12.5px;
+  line-height:1.85;
+  color:#4e5e50;
 }
-.design-atlas .ecosystem-logos-pair{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px;
-  min-height:210px;padding-top:8px;
+@media(min-width:640px){
+  .design-atlas .ecosystem-intro{
+    flex-direction:row;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:30px;
+  }
+  .design-atlas .ecosystem-roles{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }
-.design-atlas .ecosystem-logo-unit{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center}
-.design-atlas .ecosystem-logo-unit+.ecosystem-logo-unit{border-inline-start:1px solid #a2b19d;padding-inline-start:10px}
-.design-atlas .ecosystem-logo-unit .ecosystem-logo{
-  min-height:115px;width:100%;margin:0;
-}
-.design-atlas .ecosystem-logo-habaq img{max-height:99px}
-.design-atlas .ecosystem-logo-nas img{max-height:99px}
-.design-atlas .ecosystem-logo-unit h3{font-size:18px;margin-top:10px;margin-bottom:9px}
-@media(min-width:690px){
- .design-atlas .ecosystem-intro{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:36px}
-}
-@media(min-width:1080px){
- .design-atlas .ecosystem-roles{grid-template-columns:1fr 1.65fr 1fr}
- .design-atlas .ecosystem-role{min-height:390px;border-bottom:1px solid #526454}
- .design-atlas .ecosystem-role>.ecosystem-logo{flex:1}
- .design-atlas .ecosystem-logos-pair{flex:1;align-items:center}
+@media(min-width:1120px){
+  .design-atlas .ecosystem-roles{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:clamp(12px,1.4vw,21px);
+  }
+  .design-atlas .ecosystem-role{min-height:330px}
 }
 @media(prefers-reduced-motion:reduce){
- .design-atlas .ecosystem-role,.design-atlas .ecosystem-logo{animation:none;transition:none}
+  .design-atlas .ecosystem-role,
+  .design-atlas .ecosystem-logo{animation:none;transition:none}
 }
