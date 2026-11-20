@@ -94,3 +94,37 @@ SQLite volume, and the existing Caddy/network setup. Rebuilding temporarily
 recreates the DesignWeek container; retry health checks after it starts.
 The private backup script is `bash deploy/backup.sh`; check the output and
 keep encrypted offsite copies. A GitHub merge alone does **not** update the VPS.
+
+
+## Admin login, password reset, and expanded content editor
+
+The private login is `https://designweek.nass.life/manage/login/`. By default the
+username is `admin` (unless changed privately in `.env`). The login form
+prefills the configured username, uses standard browser password-manager
+autocomplete, and can show/hide password locally. **Never save credentials in
+public website source code, GitHub, or publicly accessible pages.** On a private
+computer, save them using Chrome Password Manager or another trusted manager.
+
+If the administrator password is forgotten, from the Hostinger VPS browser
+terminal run:
+
+```bash
+cd /root/apps/designweek
+git pull --ff-only origin main
+bash deploy/reset-admin-password.sh
+```
+
+The reset script prompts twice for a new 14+ character password; it changes
+only the private `DW_ADMIN_PASSWORD_HASH` value in `.env`, then recreates
+**only** the DesignWeek container to load it. Existing applications, upload
+volume, Caddy and the other VPS apps are unaffected. The password is not
+printed, stored in the public site or committed. If the script is missing,
+the VPS does not yet have this GitHub update.
+
+The content editor at `/manage/content/` has a searchable section list and
+field search. It covers the homepage and navigation, artistic tracks, programme
+and daily events, participation descriptions, standards, future plans, FAQs
+and footer. Text-only edits are saved privately to SQLite and become visible
+after a page refresh, without a deployment. Structural changes (adding a
+new day, a new category, new image blocks, or changing app logic) still require
+software changes. After editing, verify the public page and private backups.
