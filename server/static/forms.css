@@ -36,3 +36,8 @@
 .cms-actions{display:flex;flex-wrap:wrap;align-items:center;gap:18px;border-top:2px solid var(--line);padding-top:18px}
 .cms-actions span{color:#566557;font-size:12px}
 @media(min-width:850px){.cms-layout{grid-template-columns:250px minmax(0,1fr);gap:36px;align-items:start}.cms-sidebar{position:sticky;top:16px}.cms-sidebar .cms-nav{max-height:72vh}.cms-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cms-field:has(textarea[rows="5"]){grid-column:1/-1}}
+
+/* Login: browser password manager compatible, without public secret storage. */
+.reveal-password{display:inline-flex;margin:0 0 18px;padding:7px 0;border:0;border-bottom:1px solid currentColor;color:var(--ink);background:transparent;font-weight:700;font-size:12px}
+.login-submit{margin:2px 0 28px}
+.form.narrow input[name="username"],.form.narrow input[name="password"]{width:100%;background:#F8F5ED;border:1.5px solid #657665;padding:12px 13px;min-height:49px}
