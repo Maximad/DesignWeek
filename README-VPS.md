@@ -128,3 +128,24 @@ and footer. Text-only edits are saved privately to SQLite and become visible
 after a page refresh, without a deployment. Structural changes (adding a
 new day, a new category, new image blocks, or changing app logic) still require
 software changes. After editing, verify the public page and private backups.
+
+
+## Organizational credits and official identity — Hub Design Week
+
+The public page includes a visible organizational-credits section immediately after
+the venue overview and a compact attribution in the footer. Four official brand marks
+were supplied by the project lead and added under `assets/brands/`:
+
+- `hub-sweida.png` — **هَبّ السويداء**: hosting venue and primary festival space.
+- `habaq-collective.png` — **تجمّع حبق**: organizing collective / overall umbrella.
+- `habaq-nas.png` — **حبق ناس**: Habaq Nas community initiative involved in organization;
+  it is **part of the collective**, not incorrectly represented as a separate unrelated organizer.
+- `habaq-media.png` — **حبق ميديا**: event media coverage and documentation, with
+  **editorial independence** preserved. The standalone «ح» mark belongs specifically to
+  Habaq Media, not the whole collective.
+
+This explicit role breakdown is part of the public copy. The credit headings,
+organization names and explanatory text also have whitelisted `data-cms-key` fields
+and are editable as plain text at `/manage/content/` under **الجهات والأدوار**.
+Logo replacements remain version-controlled assets, not arbitrary uploads.
+No financial commitments, sponsorships or public editorial approvals are implied.
