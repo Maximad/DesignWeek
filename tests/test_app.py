@@ -181,3 +181,37 @@ def test_requested_arabic_copy_and_complete_editor_navigation():
         assert 'cms-field-search' in editor.text
         assert 'cms-nav-search' in editor.text
         assert 'data-search-text' in editor.text
+
+
+
+def test_ecosystem_roles_and_supplied_brand_assets():
+    """Public copy distinguishes the host, collective/Nas organizers, and Media."""
+    page = (dw.ROOT / 'index.html').read_text(encoding='utf-8')
+    assert 'id="ecosystem"' in page
+    assert 'المكان المضيف لأسبوع التصميم' in page
+    assert 'من تنظيم تجمّع حبق، عبر مشروع حبق ناس' in page
+    assert 'تتولى التغطية الإعلامية والتوثيق، مع الحفاظ على استقلالها التحريري' in page
+    assert 'تنظيم تجمّع حبق وحبق ناس · استضافة هَبّ السويداء · تغطية حبق ميديا' in page
+    files = (
+        'hub-sweida.png',
+        'habaq-collective.png',
+        'habaq-nas.png',
+        'habaq-media.png',
+    )
+    for filename in files:
+        assert f'./assets/brands/{filename}' in page
+        image = dw.ROOT / 'assets' / 'brands' / filename
+        assert image.is_file(), filename
+        assert image.read_bytes().startswith(bytes.fromhex('89504e470d0a1a0a'))
+    field_names = {field['key'] for field in dw.all_fields()}
+    for key in (
+        'ecosystem.title', 'ecosystem.host.role',
+        'ecosystem.host.description', 'ecosystem.habaq.name',
+        'ecosystem.nas.name', 'ecosystem.organizing.description',
+        'ecosystem.media.name', 'ecosystem.media.description',
+    ):
+        assert key in field_names
+    with TestClient(dw.app, base_url='https://testserver') as client:
+        assert client.get('/').status_code == 200
+        for filename in files:
+            assert client.get('/assets/brands/' + filename).status_code == 200
