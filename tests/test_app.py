@@ -250,3 +250,8 @@ def test_faq_bold_titles_and_background_echo_are_accessible():
     assert '@media(prefers-reduced-motion:reduce)' in css
     js = (dw.ROOT / 'assets' / 'main.js').read_text(encoding='utf-8')
     assert 'echo.textContent = title.textContent.trim()' in js
+
+
+def test_faq_cms_echo_script_is_cache_busted():
+    page = (dw.ROOT / 'index.html').read_text(encoding='utf-8')
+    assert '<script defer src="./assets/main.js?v=20261120-faq"></script>' in page
