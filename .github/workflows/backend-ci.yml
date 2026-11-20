@@ -8,6 +8,7 @@ on:
       - 'tests/**'
       - 'requirements.txt'
       - 'deploy/backup.sh'
+      - 'deploy/reset-admin-password.sh'
       - '.github/workflows/backend-ci.yml'
   pull_request:
 permissions:
@@ -21,7 +22,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r requirements.txt pytest httpx
-      - run: bash -n deploy/backup.sh
-      - run: node --check assets/main.js
+      - run: bash -n deploy/backup.sh deploy/reset-admin-password.sh
+      - run: node --check assets/main.js && node --check server/static/editor.js && node --check server/static/login.js
       - run: python -m compileall -q server
       - run: python -m pytest -q tests
