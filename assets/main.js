@@ -9,6 +9,13 @@
     const value = liveContent[el.dataset.cmsKey];
     if (typeof value === 'string' && value.trim()) el.textContent = value;
   });
+  // Keep the decorative FAQ echoes synchronized with CMS-edited question titles.
+  // The real, accessible question stays in <summary>; the echo is aria-hidden.
+  $('.faq-list details').forEach(item => {
+    const title = $('.faq-question', item);
+    const echo = $('.faq-echo', item);
+    if (title && echo) echo.textContent = title.textContent.trim();
+  });
   const nav = $('#site-nav');
   const toggle = $('.nav-toggle');
   if (toggle && nav) {
