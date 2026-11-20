@@ -230,3 +230,23 @@ def test_ecosystem_logos_use_compact_responsive_four_card_grid():
     assert 'grid-template-columns:repeat(2,minmax(0,1fr))' in css
     assert 'max-height:104px' in css
     assert 'overflow:hidden' in css
+
+
+def test_faq_bold_titles_and_background_echo_are_accessible():
+    """Only the plus icon rotates; titles stay RTL and the ghost is decorative."""
+    page = (dw.ROOT / 'index.html').read_text(encoding='utf-8')
+    faq = page.split('id="faq"', 1)[1].split('class="closing-section"', 1)[0]
+    assert faq.count('class="faq-question"') == 7
+    assert faq.count('class="faq-toggle" aria-hidden="true"') == 7
+    assert faq.count('class="faq-echo" aria-hidden="true"') == 7
+    assert 'faq-redesign.css?v=20261120-1' in page
+    css = (dw.ROOT / 'assets' / 'faq-redesign.css').read_text(encoding='utf-8')
+    assert 'grid-template-columns:' in css
+    assert 'font-weight:800' in css
+    assert '.faq-question' in css and '.faq-toggle' in css
+    assert 'details[open] summary .faq-question' in css
+    assert 'transform:none' in css
+    assert 'details[open] summary .faq-toggle' in css
+    assert '@media(prefers-reduced-motion:reduce)' in css
+    js = (dw.ROOT / 'assets' / 'main.js').read_text(encoding='utf-8')
+    assert 'echo.textContent = title.textContent.trim()' in js
