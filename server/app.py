@@ -353,9 +353,21 @@ def edit_site_content(request: Request, section: str = "", saved: str = ""):
         section = next(iter(groups), "")
     with connect() as db:
         overrides = {row["key"]: row["value"] for row in db.execute("SELECT key,value FROM site_content")}
+    def section_url(name: str) -> str:
+        if name.startswith("البرنامج"): return "/#program"
+        if name.startswith("تفاصيل المشاركة") or name == "المشاركة": return "/#participate"
+        return {
+            "مقدمة الأسبوع": "/", "التنقل": "/", "دليل الموقع": "/",
+            "تعريف الأسبوع": "/#about", "المبادئ والقيم": "/#about",
+            "المحاور الفنية": "/#tracks", "المكان": "/#place",
+            "معايير الاختيار": "/#standards", "الرؤية المستقبلية": "/#future",
+            "الأسئلة الشائعة": "/#faq", "الدعوة الختامية": "/#future",
+            "التذييل": "/",
+        }.get(name, "/")
     return render(
         request, "content-editor.html", groups=groups, overrides=overrides,
         active=section, saved=saved == "1", csrf=token_for("content:" + section),
+        preview_links={name: section_url(name) for name in groups},
     )
 
 
@@ -393,7 +405,7 @@ async def save_site_content(request: Request):
 def login(request: Request):
     if authenticated(request):
         return RedirectResponse("/manage/", status_code=303)
-    return render(request, "login.html", csrf=token_for("login"), error=None)
+    return render(request, "login.html", csrf=token_for("login"), error=None, admin_username=ADMIN_USER)
 
 
 @app.post("/manage/login/", response_class=HTMLResponse)
@@ -402,7 +414,7 @@ async def login_post(request: Request, username: str = Form(""), password: str =
     if hmac.compare_digest(username, ADMIN_USER) and check_admin_password(password):
         request.session["dw_admin"] = ADMIN_USER
         return RedirectResponse("/manage/", status_code=303)
-    return render(request, "login.html", csrf=token_for("login"), error="معلومات الدخول غير صحيحة")
+    return render(request, "login.html", csrf=token_for("login"), error="معلومات الدخول غير صحيحة", admin_username=ADMIN_USER)
 
 
 @app.post("/manage/logout/")
