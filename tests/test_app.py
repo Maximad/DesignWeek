@@ -185,51 +185,52 @@ def test_requested_arabic_copy_and_complete_editor_navigation():
 
 
 def test_ecosystem_roles_and_supplied_brand_assets():
-    """Public copy distinguishes the host, collective/Nas organizers, and Media."""
+    """Only the four logos and their names appear inside the ecosystem section."""
+    import re
     page = (dw.ROOT / 'index.html').read_text(encoding='utf-8')
-    assert 'id="ecosystem"' in page
-    assert 'المكان المضيف لأسبوع التصميم' in page
-    assert 'من تنظيم تجمّع حبق، عبر مشروع حبق ناس' in page
-    assert 'تتولى التغطية الإعلامية والتوثيق، مع الحفاظ على استقلالها التحريري' in page
+    section = page.split('<section class="section-shell ecosystem-section"', 1)[1].split('</section>', 1)[0]
+    assert 'id="ecosystem"' in section
+    assert 'وراء الأسبوع' in section
+    assert len(re.findall(r'<article class="ecosystem-role ', section)) == 4
+    assert len(re.findall(r'<h3 data-cms-key="ecosystem\.', section)) == 4
+    assert section.count('<img ') == 4
+    assert '<p' not in section
+    assert 'ecosystem-role-top' not in section
+    assert '01 / HOST' not in section
+    assert 'ecosystem.intro' not in section
     assert 'تنظيم تجمّع حبق وحبق ناس · استضافة هَبّ السويداء · تغطية حبق ميديا' in page
-    files = (
-        'hub-sweida.png',
-        'habaq-collective.png',
-        'habaq-nas.png',
-        'habaq-media.png',
-    )
+    files = ('hub-sweida.png', 'habaq-collective.png', 'habaq-nas.png', 'habaq-media.png')
     for filename in files:
-        assert f'./assets/brands/{filename}' in page
+        assert f'./assets/brands/{filename}' in section
         image = dw.ROOT / 'assets' / 'brands' / filename
         assert image.is_file(), filename
         assert image.read_bytes().startswith(bytes.fromhex('89504e470d0a1a0a'))
     field_names = {field['key'] for field in dw.all_fields()}
-    for key in (
-        'ecosystem.title', 'ecosystem.host.role',
-        'ecosystem.host.description', 'ecosystem.habaq.name',
-        'ecosystem.nas.name', 'ecosystem.organizing.description',
-        'ecosystem.media.name', 'ecosystem.media.description',
-    ):
+    for key in ('ecosystem.title', 'ecosystem.host.name', 'ecosystem.habaq.name',
+                'ecosystem.nas.name', 'ecosystem.media.name'):
         assert key in field_names
+    for key in ('ecosystem.host.role', 'ecosystem.host.description',
+                'ecosystem.organizing.description', 'ecosystem.media.description'):
+        assert key not in field_names
     with TestClient(dw.app, base_url='https://testserver') as client:
         assert client.get('/').status_code == 200
         for filename in files:
             assert client.get('/assets/brands/' + filename).status_code == 200
 
 
-def test_ecosystem_logos_use_compact_responsive_four_card_grid():
-    """All four brands are peer cards with constrained artwork and refreshed CSS."""
-    import re
+def test_ecosystem_logos_are_minimal_and_responsive():
+    """No individual cards or shadows; consistent sized logos, 4 columns on desktop."""
     page = (dw.ROOT / 'index.html').read_text(encoding='utf-8')
-    section = page.split('id="ecosystem"', 1)[1].split('id="program"', 1)[0]
-    assert len(re.findall(r'<article class="ecosystem-role ', section)) == 4
-    assert len(re.findall(r'class="ecosystem-logo ecosystem-logo-', section)) == 4
-    assert 'atlas.css?v=20261120-ecosystem-4' in page
+    assert 'atlas.css?v=20261120-ecosystem-minimal' in page
     css = (dw.ROOT / 'assets' / 'atlas.css').read_text(encoding='utf-8')
-    assert 'grid-template-columns:repeat(4,minmax(0,1fr))' in css
-    assert 'grid-template-columns:repeat(2,minmax(0,1fr))' in css
-    assert 'max-height:104px' in css
-    assert 'overflow:hidden' in css
+    section = css.split('/* Ecosystem logo wall:', 1)[1]
+    assert 'grid-template-columns:repeat(4,minmax(0,1fr))' in section
+    assert 'grid-template-columns:repeat(2,minmax(0,1fr))' in section
+    assert 'box-shadow:none' in section
+    assert 'background:transparent' in section
+    assert 'border:0' in section
+    for name in ('hub', 'habaq', 'nas', 'media'):
+        assert f'.ecosystem-logo-{name} img' in section
 
 
 def test_faq_bold_titles_and_background_echo_are_accessible():
