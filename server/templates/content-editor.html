@@ -1,31 +1,55 @@
 {% extends 'base.html' %}
 {% block title %}تحرير محتوى الموقع — أسبوع التصميم{% endblock %}
 {% block content %}
-<div class="eyebrow">DESIGN WEEK / CONTENT EDITOR</div>
-<h1>تحرير <em>الموقع.</em></h1>
-<p class="lead">عدّل عناوين وأوصاف المحاور والأنشطة والبرنامج والمشاركة والأسئلة. تُحفظ التعديلات في مساحة خاصة وتظهر على الموقع عند إعادة تحميله، دون تعديل الكود.</p>
-<div class="toolbar"><a href="/manage/">← طلبات المشاركة</a><a href="/" target="_blank" rel="noopener noreferrer">معاينة الموقع ↗</a></div>
-{% if saved %}<div class="notice" role="status">حُفظت التعديلات بنجاح. افتح الموقع أو حدّث الصفحة لمعاينتها.</div>{% endif %}
-<nav class="cms-nav" aria-label="أقسام محتوى الموقع">
-{% for name, fields in groups.items() %}
-<a href="/manage/content/?section={{name|urlencode}}" {% if name == active %}aria-current="page"{% endif %}>{{name}} <small>{{fields|length}}</small></a>
-{% endfor %}
-</nav>
-{% if active %}
-<section class="cms-section" aria-labelledby="cms-title">
-<h2 id="cms-title">{{active}}</h2>
-<p class="hint">الحقول تُظهر النص الأصلي أو النص المعدّل. لحذف تعديل وإعادة النص الافتراضي، اترك الحقل فارغاً ثم احفظ. النص فقط؛ لا يُسمح بإضافة HTML.</p>
-<form class="form" method="post" action="/manage/content/">
-<input type="hidden" name="section" value="{{active}}">
-<input type="hidden" name="csrf" value="{{csrf}}">
-{% for field in groups[active] %}
-<label class="cms-field" for="cms-{{loop.index}}">{{field.label}}
-<textarea id="cms-{{loop.index}}" name="{{field.key}}" rows="{% if field.default|length > 145 %}5{% else %}2{% endif %}" maxlength="2500" dir="rtl">{{overrides.get(field.key, field.default)}}</textarea>
-{% if field.key in overrides %}<small class="cms-edited">نص معدل</small>{% else %}<small>النص الافتراضي</small>{% endif %}
-</label>
-{% endfor %}
-<button type="submit" class="submit">حفظ هذا القسم</button>
-</form>
-</section>
-{% endif %}
+<div class="eyebrow">DESIGN WEEK / CONTENT MANAGEMENT</div>
+<h1>محتوى <em>الموقع.</em></h1>
+<p class="lead">تحكّم بنصوص كامل أقسام الموقع: العناوين، الشروحات، المحاور، أنشطة الأيام، أشكال المشاركة، المعايير والأسئلة. لا تحتاج لتعديل الكود.</p>
+<div class="toolbar">
+  <a href="/manage/">← إدارة الطلبات</a>
+  <a href="/" target="_blank" rel="noopener noreferrer">معاينة الموقع ↗</a>
+</div>
+{% if saved %}<div class="notice" role="status">تم حفظ التعديلات. ستظهر عند تحديث الموقع.</div>{% endif %}
+<div class="cms-layout">
+  <aside class="cms-sidebar">
+    <label for="cms-nav-search">أقسام الموقع</label>
+    <input type="search" id="cms-nav-search" placeholder="ابحث عن قسم..." autocomplete="off">
+    <nav class="cms-nav" aria-label="أقسام محتوى الموقع">
+      {% for name, fields in groups.items() %}
+      <a href="/manage/content/?section={{name|urlencode}}" data-search-text="{{name}}" {% if name == active %}aria-current="page"{% endif %}>
+        <span>{{name}}</span><small>{{fields|length}}</small>
+      </a>
+      {% endfor %}
+    </nav>
+  </aside>
+  {% if active %}
+  <section class="cms-section" aria-labelledby="cms-title">
+    <div class="cms-section-head">
+      <div>
+        <span class="eyebrow">EDIT CONTENT / {{groups[active]|length}} FIELDS</span>
+        <h2 id="cms-title">{{active}}</h2>
+      </div>
+      <a href="{{preview_links.get(active, '/') }}" target="_blank" rel="noopener noreferrer">عرض القسم ↗</a>
+    </div>
+    <p class="hint">عدّل النصوص ثم اضغط «حفظ التعديلات». لإعادة نص افتراضي، امسح محتوى الحقل واحفظ. التعديل نصّي فقط، للحفاظ على تنسيق وتصميم الموقع.</p>
+    <label class="cms-search-label" for="cms-field-search">ابحث ضمن نصوص هذا القسم</label>
+    <input type="search" id="cms-field-search" placeholder="عنوان، وصف، نشاط، سؤال..." autocomplete="off">
+    <p id="cms-search-count" class="hint" aria-live="polite"></p>
+    <form class="form" method="post" action="/manage/content/">
+      <input type="hidden" name="section" value="{{active}}">
+      <input type="hidden" name="csrf" value="{{csrf}}">
+      <div class="cms-fields">
+      {% for field in groups[active] %}
+      <label class="cms-field" for="cms-{{loop.index}}" data-search-text="{{field.label}} {{field.key}}">
+        <span>{{field.label}}</span>
+        <textarea id="cms-{{loop.index}}" name="{{field.key}}" rows="{% if field.default|length > 145 %}5{% else %}2{% endif %}" maxlength="2500" dir="rtl">{{overrides.get(field.key, field.default)}}</textarea>
+        {% if field.key in overrides %}<small class="cms-edited">معدَّل — النص محفوظ في لوحة التحكم</small>{% else %}<small>النص الافتراضي</small>{% endif %}
+      </label>
+      {% endfor %}
+      </div>
+      <div class="cms-actions"><button type="submit" class="submit">حفظ تعديلات هذا القسم</button><span>الحفظ لا يغيّر أي قسم آخر.</span></div>
+    </form>
+  </section>
+  {% endif %}
+</div>
+<script defer src="/server-static/editor.js"></script>
 {% endblock %}
