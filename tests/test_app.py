@@ -202,7 +202,7 @@ def test_ecosystem_roles_and_supplied_brand_assets():
         assert f'./assets/brands/{filename}' in page
         image = dw.ROOT / 'assets' / 'brands' / filename
         assert image.is_file(), filename
-        assert image.read_bytes().startswith(b'\\x89PNG\\r\\n\\x1a\\n')
+        assert image.read_bytes().startswith(bytes.fromhex('89504e470d0a1a0a'))
     field_names = {field['key'] for field in dw.all_fields()}
     for key in (
         'ecosystem.title', 'ecosystem.host.role',
