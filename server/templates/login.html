@@ -1,4 +1,21 @@
-{% extends 'base.html' %}{% block title %}دخول فريق المراجعة{% endblock %}
-{% block content %}<div class="eyebrow">PRIVATE REVIEW</div><h1>مساحة <em>الفريق.</em></h1>
-{% if error %}<div class="alert">{{error}}</div>{% endif %}
-<form class="form narrow" method="post" action="/manage/login/"><input type="hidden" name="csrf" value="{{csrf}}"><label>اسم المستخدم<input name="username" autocomplete="username" required></label><label>كلمة المرور<input name="password" type="password" autocomplete="current-password" required></label><button type="submit" class="submit">دخول ↗</button></form>{% endblock %}
+{% extends 'base.html' %}
+{% block title %}دخول إدارة أسبوع التصميم{% endblock %}
+{% block content %}
+<div class="eyebrow">DESIGN WEEK / ADMIN</div>
+<h1>إدارة <em>الأسبوع.</em></h1>
+<p class="lead">لوحة إدارة الطلبات والموقع. يمكنك حفظ بيانات الدخول في مدير كلمات المرور في المتصفح، دون وضع كلمة المرور في الموقع نفسه.</p>
+{% if error %}<div class="alert" role="alert">{{error}}</div>{% endif %}
+<form class="form narrow" method="post" action="/manage/login/">
+  <input type="hidden" name="csrf" value="{{csrf}}">
+  <label for="admin-username">اسم المستخدم
+    <input id="admin-username" name="username" type="text" value="{{admin_username}}" autocomplete="username" required>
+  </label>
+  <label for="admin-password">كلمة المرور
+    <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+  </label>
+  <button id="toggle-admin-password" type="button" class="reveal-password" aria-controls="admin-password" aria-pressed="false">إظهار كلمة المرور</button>
+  <div class="login-submit"><button type="submit" class="submit">دخول إلى الإدارة ↗</button></div>
+</form>
+<p class="hint">نسيت كلمة المرور؟ لا يمكن عرض القديمة، لكن يمكن تعيين واحدة جديدة بأمان من طرفية الـVPS باستخدام <code>bash deploy/reset-admin-password.sh</code>. عند تسجيل الدخول، وافق على خيار «حفظ كلمة المرور» في Chrome على جهازك الشخصي فقط.</p>
+<script defer src="/server-static/login.js"></script>
+{% endblock %}
